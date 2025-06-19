@@ -1,0 +1,36 @@
+{
+    "model": {
+        "aguvis": {
+            "model_path": "/home/test/datasets/any_path_you_want/MMBench-GUI/checkpoint/Aguvis-7B-720P",
+            "generate_cfg": {
+                "top_p": 0.7,
+                "max_new_tokens": 2048,
+                "temperature": 0.7,
+                "repetition_penalty": 1.0
+            },
+            "imp_type": "transformers",
+            "generate_function": "generate",
+            "preprocess_function": "models.aguvis.preprocess_aguvis",
+            "postprocess_function": "models.aguvis.postprocess_aguvis",
+            "custom_prompt": {
+                "GUIContentUnderstanding": "model.aguvis.build_gui_content_understanding_prompt"
+            },
+            "kwargs": {
+                "min_pixels": 200704,
+                "max_pixels": 937664
+            }
+        }
+    },
+    "data": {
+        "GUIElementGrounding": {
+            "mode": "all",
+            "parse_function": "models.aguvis.parse_gui_bbox_aguvis"
+        },
+        "GUIContentUnderstanding": {
+            "mode": "easy",
+            "parse_function": "models.aguvis.parse_gui_qa_aguvis",
+            "match_mode": "exact_match"
+        }
+
+    }
+}

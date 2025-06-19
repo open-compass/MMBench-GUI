@@ -1,0 +1,37 @@
+{
+    "model": {
+        "gpt-4o": {
+            "model_path": "http://endpoint_url/v1?api_key=xxxxxxxxxxxxxxxxx&model=gpt-4o",
+            "generate_cfg": {
+                "max_tokens": 2048,
+                "temperature": 0.7
+            },
+            "imp_type": "openai",
+            "generate_function": "",
+            "preprocess_function": "",
+            "postprocess_function": "models.api.postprocess_api",
+            "custom_prompt": {
+                "GUIContentUnderstanding": "model.api.build_prompt_example"
+            },
+            "kwargs": {
+                "min_pixels": 200704,
+                "max_pixels": 937664,
+                "system_propmpt": "",
+                "img_size": -1,
+                "img_detail": "low"
+            }
+        }
+    },
+    "data": {
+        "GUIElementGrounding": {
+            "mode": "all",
+            "parse_function": "models.api.parse_gui_bbox_api"
+        },
+        "GUIContentUnderstanding": {
+            "mode": "easy",
+            "parse_function": "models.api.parse_gui_qa_api",
+            "match_mode": "exact_match"
+        }
+
+    }
+}
