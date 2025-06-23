@@ -5,19 +5,23 @@ import types
 import inspect
 import importlib.util
 
+
 def dynamic_import(class_name: str, module_name: str = "transformers"):
     module = importlib.import_module(module_name)
     cls = getattr(module, class_name, None)
     return cls
 
+
 def dynamic_import_function(path: str, base_path: str = None):
     try:
-        module_name = '.'.join(path.split('.')[:-1])
-        function_name = path.split('.')[-1]
+        module_name = ".".join(path.split(".")[:-1])
+        function_name = path.split(".")[-1]
 
         if base_path is None:
             caller_file = inspect.stack()[1].filename
-            base_path = os.path.abspath(os.path.join(os.path.dirname(caller_file), ".."))
+            base_path = os.path.abspath(
+                os.path.join(os.path.dirname(caller_file), "..")
+            )
 
         if base_path not in sys.path:
             sys.path.insert(0, base_path)
@@ -47,4 +51,6 @@ def import_function_from_file(file_path: str, function_name: str):
         return getattr(module, function_name)
 
     except Exception as e:
-        raise ImportError(f"Failed to load function '{function_name}' from file '{file_path}': {e}")
+        raise ImportError(
+            f"Failed to load function '{function_name}' from file '{file_path}': {e}"
+        )
