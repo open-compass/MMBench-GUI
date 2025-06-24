@@ -1,0 +1,18 @@
+torch
+torchvision
+requests
+tqdm
+vlmeval==0.1.0
+tqdm
+qwen-vl-utils
+timm
+accelerate
+dotenv
+einops
+fastapi
+ipdb
+matplotlib
+openai
+pillow
+transformers
+flash-attn #--build-no-isolation
