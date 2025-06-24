@@ -335,7 +335,7 @@ touch models/local_uitars.py
 ```shell
 touch configs/config_local_uitars.json
 ```
-    and write relavant informations, such as the path of customized functions, parameters.
+and write relavant informations, such as the path of customized functions, parameters.
 
 ```json
 {
@@ -380,8 +380,7 @@ touch configs/config_local_uitars.json
 ```shell
 python evaluate.py --config configs/config_local_uitars.py
 ```
-
-    Our code is based on VLMEvalkit, thus the root path of data can be defined with the `LMUData`:
+Our code is based on VLMEvalkit, thus the root path of data can be defined with the `LMUData`:
 
 ```shell
 LMUData=/mnt/hwfile/any/dir/LMUData python evaluate.py --config configs/config_local_uitars.py
