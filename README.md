@@ -28,7 +28,7 @@ MMBench-GUI is developed based on [VLMEvalkit](https://github.com/open-compass/V
 * **2025.06.24** We have released the refactoring code for level1-GUI Content Understanding and level2-GUI Element Grounding tasks. Next, tasks of level3 and level4 will also be integrated into this codebase.
 * **2025.06.24** We have released the images and json files used in level1-GUI Content Understanding and level2-GUI Element Grounding tasks. Resources of level3 and level4 will be release in the next one or two weeks.
 
-## Performance
+## 📊 Performance
 
 > **Note:** We are validating the final results again. Thus, performance of models shown in this table would change and we will update this as soon as possible.
 
@@ -48,7 +48,7 @@ MMBench-GUI is developed based on [VLMEvalkit](https://github.com/open-compass/V
 
 ![](./assets/level4.png)
 
-## How-to-Use
+## ⚙️ How-to-Use
 
 In this section, we provide detailed instructions on how to use MMBench-GUI to evaluate your model, including the design principle, the architecture of our code, the steps to adapt to your model, and some common issues we think. 
 
@@ -390,9 +390,26 @@ LMUData=/mnt/hwfile/any/dir/LMUData python evaluate.py --config configs/config_l
 
 Coming soon!
 
-## Acknowledgement
+## 🌺 Acknowledgement
 
-## Citation
+We would like to thank the following outstanding works, which provided important references for the development of MMBench-GUI.
+
+- [VLMEvalkit](https://github.com/open-compass/VLMEvalKit)
+
+- [OSWorld](https://github.com/xlang-ai/OSWorld)
+
+- [Android Lab](https://github.com/THUDM/Android-Lab)
+
+- [ScreenSpot](https://github.com/njucckevin/SeeClick)
+
+- [ScreenSpot-Pro](https://github.com/likaixin2000/ScreenSpot-Pro-GUI-Grounding)
+
+- [WindowsAgentArena](https://github.com/microsoft/WindowsAgentArena)
+
+- [WebArena](https://github.com/web-arena-x/webarena)
+
+
+## 📌 Citation
 
 If you find our paper and code useful in your research, please consider giving a star :star: and citation :pencil: :)
 
