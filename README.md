@@ -1,7 +1,7 @@
 # 🖥️ MMBench-GUI: Hierarchical Multi-Platform Evaluation Framework for GUI Agents
 
 > [!NOTE]
-> Our technical report will be released on arxiv.org *in next one week* after finishing the twice validation of evaluation results we have obtained one month ago.
+> Our technical report will be released on arxiv.org *in next week* after finishing the twice validation of evaluation results we have obtained one month ago.
 
 ## 📖 Introduction
 
@@ -9,7 +9,7 @@ Recent advances in large language models (LLMs) have significantly enhanced grap
 
 MMBench-GUI, a hierarchical, multi-platform benchmarking framework, is introducted to address these gaps. MMBench-GUI is comprising four evaluation levels: GUI Content Understanding, GUI Element Grounding, GUI Task Automation, and GUI Task Collaboration. We also propose the Efficiency–Quality Area (EQA) metric for agent navigation, integrating accuracy and efficiency. MMBench-GUI provides a rigorous standard for evaluating and guiding future developments in GUI agent capabilities.
 
-MMBench-GUI is developed based on [VLMEvalkit](https://github.com/open-compass/VLMEvalKit), supporting the evaluation of models in a API manner or local deployment manner. We hope that MMBench-GUI will enable more researchers to evaluate agents more efficiently and comprehensively. You can refer to the [How-to-Use](#how-to-use) section for usage details.
+MMBench-GUI is developed based on [VLMEvalkit](https://github.com/open-compass/VLMEvalKit), supporting the evaluation of models in a API manner or local deployment manner. We hope that MMBench-GUI will enable more researchers to evaluate agents more efficiently and comprehensively. You can refer to the [How-to-Use](#how-to-use) section for detailed usage.
 
 ### Contributions
 
