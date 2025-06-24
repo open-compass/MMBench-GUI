@@ -57,7 +57,7 @@ In this section, we provide detailed instructions on how to use MMBench-GUI to e
 
 #### Design principle
 
-We simply show the evaluation process in this figure. Our core **design principle** is to enable partial customization of model-side functionality based on currently common training/inference paradigms (such as `transformers` or API-based approaches), so that most of the code can be reused.
+Our core **design principle** is to enable partial customization of model-side functionality based on currently common training/inference paradigms (such as `transformers` or API-based approaches), so that most of the code can be reused.
 
 Specifically, we avoid introducing model files or external code directly into the project by supporting universal interfaces like `transformers.from_pretrained` for local deployment and `client.chat.completions.create` for OpenAI-style API calls.
 
@@ -77,7 +77,7 @@ Once the `data` flows out from the `dataloader`, the inference pipeline is divid
 
 After these steps, the evaluations of `responses` are conducted using `our_benchmark.evaluate`. In this process, all you need is to provide (or use our default implementation) a customized function to parse key informations.
 
-**Based on above instruction, you are only required to implement a `custom_build_prompt`, a `preprocess_func`, a `postprocess_func`, and a `parse_response_func`. We have achieved a default function to handle these processes and if you do not have special format to be configured, you even DO NOT need to write these four functions!**
+**Based on above instruction, you are only required to implement a `custom_build_prompt`, a `preprocess_func`, a `postprocess_func`, and a `parse_response_func`. We have achieved default functions in our base model and benchmarks to handle these processes and if you do not have special format to be configured, you even DO NOT need to write these four functions!**
 
 #### The architecture of our code
 
