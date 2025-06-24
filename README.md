@@ -1,5 +1,8 @@
 # 🖥️ MMBench-GUI: Hierarchical Multi-Platform Evaluation Framework for GUI Agents
 
+> [!NOTE]
+> Our technical report will be released on arxiv.org *in next one week* after finishing the twice validation of evaluation results we have obtained one month ago.
+
 ## 📖 Introduction
 
 Recent advances in large language models (LLMs) have significantly enhanced graphical user interface (GUI) agents. However, current benchmarks predominantly evaluate isolated tasks, leaving critical questions unanswered about cross-task correlations, performance-efficiency relationships, platform-specific differences, and primary bottlenecks.
