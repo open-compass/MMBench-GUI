@@ -1,0 +1,35 @@
+{
+    "model": {
+        "uitars-1.5-7b-local": {
+            "model_path": "/mnt/petrelfs/wangxuehui/project/computer_use/MMBench-GUI/checkpoint/UI-TARS-1.5-7B",
+            "generate_cfg": {
+                "max_new_tokens": 512
+            },
+            "imp_type": "transformers",
+            "generate_function": "generate",
+            "preprocess_function": "models.local_uitars.preprocess_uitars",
+            "postprocess_function": "models.local_uitars.postprocess_uitars",
+            "custom_prompt": {
+                "GUIElementGrounding": "models.local_uitars.build_custom_prompt"
+            },
+            "kwargs": {
+                "system_prompt": "model_default",
+                "max_pixels": 2116800,
+                "min_pixels": 3136,
+                "img_size": -1,
+                "img_detail": "low"
+            }
+        }
+    },
+    "data": {
+        "GUIElementGrounding": {
+            "mode": "all",
+            "parse_function": "models.local_uitars.parse_grounding_response"
+        },
+        "GUIContentUnderstanding": {
+            "mode": "all",
+            "parse_function": "models.local_uitars.parse_understanding_response",
+            "match_mode": "exact_match"
+        }
+    }
+}

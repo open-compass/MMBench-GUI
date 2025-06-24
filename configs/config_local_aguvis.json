@@ -1,0 +1,35 @@
+{
+    "model": {
+        "aguvis-7B-720P": {
+            "model_path": "/mnt/petrelfs/wangxuehui/project/computer_use/MMBench-GUI/checkpoint/Aguvis-7B-720P",
+            "generate_cfg": {
+                "max_new_tokens": 2048
+            },
+            "imp_type": "transformers",
+            "generate_function": "generate",
+            "preprocess_function": "models.local_aguvis.preprocess_aguvis",
+            "postprocess_function": "models.local_aguvis.postprocess_aguvis",
+            "custom_prompt": {
+                "GUIContentUnderstanding": "model.local_aguvis.build_gui_content_understanding_prompt"
+            },
+            "kwargs": {
+                "system_propmpt": "benchmark_default",
+                "min_pixels": 200704,
+                "max_pixels": 937664,
+                "img_size": -1,
+                "img_detail": "low"
+            }
+        }
+    },
+    "data": {
+        "GUIElementGrounding": {
+            "mode": "all",
+            "parse_function": "models.local_aguvis.parse_gui_bbox_aguvis"
+        },
+        "GUIContentUnderstanding": {
+            "mode": "hard",
+            "parse_function": "models.local_aguvis.parse_gui_qa_aguvis",
+            "match_mode": "exact_match"
+        }
+    }
+}

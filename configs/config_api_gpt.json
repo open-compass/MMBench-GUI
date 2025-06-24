@@ -1,0 +1,38 @@
+{
+    "model": {
+        "gpt-4o": {
+            "model_path": "https://api.openai.com/v1?api_key=your-api-key=gpt-4o",
+            "generate_cfg": {
+                "max_tokens": 2048,
+                "frequency_penalty": 1,
+                "temperature": 0.7,
+                "top_p": 0.9
+            },
+            "imp_type": "openai",
+            "generate_function": "",
+            "preprocess_function": "",
+            "postprocess_function": "models.api_gpt.postprocess_api",
+            "custom_prompt": {
+                "GUIContentUnderstanding": "model.api_gpt.build_prompt_example"
+            },
+            "kwargs": {
+                "min_pixels": 200704,
+                "max_pixels": 937664,
+                "system_prompt": "You are an GUI expert and you can use computer to finish daily tasks.",
+                "img_size": -1,
+                "img_detail": "low"
+            }
+        }
+    },
+    "data": {
+        "GUIElementGrounding": {
+            "mode": "all",
+            "parse_function": "models.api_gpt.parse_gui_bbox_api"
+        },
+        "GUIContentUnderstanding": {
+            "mode": "all",
+            "parse_function": "models.api_gpt.parse_gui_qa_api",
+            "match_mode": "exact_match"
+        }
+    }
+}

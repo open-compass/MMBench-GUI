@@ -1,0 +1,40 @@
+{
+    "model": {
+        "uitars-1.5-7b-api": {
+            "model_path": "http://10.140.20.3:8000/v1?api_key=random-api-key&model=ui-tars",
+            "generate_cfg": {
+                "max_tokens": 512,
+                "frequency_penalty": 1,
+                "temperature": 0.7,
+                "top_p": 0.9
+            },
+            "imp_type": "openai",
+            "generate_function": "",
+            "preprocess_function": "",
+            "postprocess_function": "",
+            "custom_prompt": {
+                "GUIElementGrounding": "models.api_uitars.build_custom_prompt"
+            },
+            "kwargs": {
+                "system_prompt": "model_default",
+                "max_pixels": 2116800,
+                "min_pixels": 3136,
+                "shortest_edge": 1000,
+                "longest_edge": 2000,
+                "img_size": -1,
+                "img_detail": "low"
+            }
+        }
+    },
+    "data": {
+        "GUIElementGrounding": {
+            "mode": "all",
+            "parse_function": "models.api_uitars.parse_grounding_response"
+        },
+        "GUIContentUnderstanding": {
+            "mode": "all",
+            "parse_function": "models.api_uitars.parse_understanding_response",
+            "match_mode": "exact_match"
+        }
+    }
+}
