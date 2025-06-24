@@ -3,6 +3,7 @@ import torch
 import re, os
 from utils.misc import ensure_image_url, parser_answers_into_option
 import math
+from vlmeval.smp import LMUDataRoot
 
 # ------------------------ constants, copied from official repo of uitars --------------------------
 IMAGE_FACTOR = 28
@@ -130,6 +131,26 @@ def uitars_postprocess(pred_point, size):
 
 
 def preprocess_uitars(message, model, processor, **kwargs):
+    """
+    Process message into input_ids, attn_masks, etc.
+
+    Args:
+        message (list[dict])
+                An example:
+                    message = [
+                        dict(role='system', type='text', value='You are an agent.'),
+                        dict(role='user', type='image', value='path/to/your/image.png'),
+                        dict(role='user', type='text', value='your user prompt')
+                    ]
+                The system prompt is optional and it's determined by your setting.
+        model (LocalModelWrapper, ApiModelWrapper), this is used to get any variables or functions you need from model
+        processor (transformers.AutoProcessor), this is used to get any variables or functions you need from processor
+        kwargs (optional), parameters provided in your config: `models.your_model_name.kwargs`
+
+    Returns:
+        inputs (dict, BatchFeature): outputs from processor
+
+    """
     from qwen_vl_utils import process_vision_info
 
     messages = []
@@ -154,6 +175,19 @@ def preprocess_uitars(message, model, processor, **kwargs):
 
 
 def postprocess_uitars(outputs, model, processor, **kwargs):
+    """
+    Process outputs into response.
+
+    Args:
+        outputs (Tensor, tuple[Tensor]), the outputs from your model, it should be decode to obtain predicted texts.
+        model (LocalModelWrapper, ApiModelWrapper), this is used to get any variables or functions you need from model
+        processor (transformers.AutoProcessor), this is used to get any variables or functions you need from processor
+        kwargs (optional), parameters provided in your config: `models.your_model_name.kwargs`
+
+    Returns:
+        resp (str): response from your model
+
+    """
     if isinstance(outputs, tuple):
         outputs = outputs[0]
     if isinstance(outputs, torch.Tensor):
@@ -169,10 +203,75 @@ def postprocess_uitars(outputs, model, processor, **kwargs):
 
 
 def build_custom_prompt(line, dataset):
+    """
+    Build prompts as you need.
+
+    Args:
+        line (dict), original data from dataloader.
+                    An example for level1:
+                    line={
+                            "index":0,
+                            "image_path": "os_ios/9e304d4e_5fdc3924_51c74094e7e217f384edd0d882ea6fb19b839ddc029893daa6dd17fafb49b3d6.png",
+                            "question": "Based on the navigation elements, what can be inferred about the current screen's position in the app's hierarchy?",
+                            "options": {
+                                "A":"It's a sub-screen within a 'Rings' section",
+                                "B":"It's the main dashboard of the app",
+                                "C":"It's a sub-screen within the 'Summary' section",
+                                "D":"It's a standalone 'Awards' page accessible from anywhere",
+                                "E":"It's the 'Sharing' section of the app"
+                            },
+                            "answer": "C",
+                            "explanation": "The green back arrow at the top left with 'Summary' indicates this is a sub-screen within the Summary section. The bottom navigation also shows 'Summary' highlighted, confirming we're in a sub-page (specifically 'Awards') within the Summary section, not on the main Summary page itself.",
+                            "difficulty": "easy"
+                            "image_size":[
+                                1179,
+                                2556
+                            ],
+                            "platform":"os_ios",
+                            "app_name":"Fitness"
+                    }
+
+                    An example for level2:
+                    line={
+                            "index":0,
+                            "image_path":"os_windows/0b08bd98_a0e7b2a5_68e346390d562be39f55c1aa7db4a5068d16842c0cb29bd1c6e3b49292a242d1.png",
+                            "instruction":"The downward arrow button allows you to scroll down through the list of years.",
+                            "bbox":[
+                                0.3875,
+                                0.1361,
+                                0.3945,
+                                0.1507
+                            ],
+                            "image_size":[
+                                2560,
+                                1440
+                            ],
+                            "data_type":"icon",
+                            "platform":"os_windows",
+                            "app_name":"calendar",
+                            "grounding_type":"basic"
+                    }
+        dataset (str), the name of the benchmark. It can be used to determine different prompt format for different task.
+                        It should be one of ["GUIElementGrounding", "GUIContentUnderstanding", "GUITaskAutomation", "GUITaskCollaboration": ,']
+    Returns:
+        msgs (list[dict]): inputs to model. It will be processed by preprocess_uitars provided by this file after some nessaccery checking.
+                            It should follow this format:
+                            [
+                                {'role': 'xxxxx', 'type': 'image/text', value: 'xxxxx},
+                                {'role': 'xxxxx', 'type': 'image/text', value: 'xxxxx},
+                                ...
+                                {'role': 'xxxxx', 'type': 'image/text', value: 'xxxxx}
+                            ]
+
+    """
     msgs = []
 
     tgt_path = os.path.join(
-        "/mnt/petrelfs/wangxuehui/project/computer_use/MMBench-GUI/release/offline_images",
+        (
+            os.environ["IMAGE_ROOT_DIR"]
+            if os.path.exists(os.environ.get("IMAGE_ROOT_DIR", ""))
+            else f"{LMUDataRoot()}/MMBench-GUI/offline_images"
+        ),
         line["image_path"],
     )
     instruction = line["instruction"]
@@ -213,19 +312,35 @@ def prepare_content(inputs, processor, **kwargs):
 
 
 def parse_grounding_response(response, meta):
+    """Parse coordinates from model's response for evaluation
 
+    Args:
+        response (str), response from model. It is also the outputs of postprocess_uitars or our default postprocess function.
+        meta (dict), original data from dataloader.
+
+    Returns:
+        parsed_predicted_point (list, None): The parsed coordinates of your prediction.
+    """
     click_point = re.findall(r"\d+", response)
     if len(click_point) == 2:
         click_point = [int(x) for x in click_point]
-        return uitars_postprocess(click_point, ast.literal_eval(meta["image_size"]))
+        parsed_predicted_point = uitars_postprocess(
+            click_point, ast.literal_eval(meta["image_size"])
+        )
+        return parsed_predicted_point
     else:
         return None
 
 
 def parse_understanding_response(response, meta):
-    """
-    Default parse function for the response.
-    It should be overridden by the user if needed.
+    """Default parse function for the response. It should be overridden by the user if needed.
+
+    Args:
+        response (str), response from model. It is also the outputs of postprocess_uitars or our default postprocess function.
+        meta (dict), original data from dataloader.
+
+    Returns:
+        match (str, None): The parsed option which is a single alphabet, for example, "B".
     """
     match = parser_answers_into_option(response)
     if match:

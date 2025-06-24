@@ -2,6 +2,7 @@ import ast
 import re, os
 from utils.misc import parser_answers_into_option
 import math
+from vlmeval.smp import LMUDataRoot
 
 # ------------------------ constants, copied from official repo of uitars --------------------------
 IMAGE_FACTOR = 28
@@ -129,10 +130,67 @@ def uitars_postprocess(pred_point, size):
 
 
 def build_custom_prompt(line, dataset):
+    """
+    Build prompts as you need.
+
+    Args:
+        line (dict), original data from dataloader.
+                    An example for level1:
+                    line={
+                            "index":0,
+                            "image_path": "os_ios/9e304d4e_5fdc3924_51c74094e7e217f384edd0d882ea6fb19b839ddc029893daa6dd17fafb49b3d6.png",
+                            "question": "Based on the navigation elements, what can be inferred about the current screen's position in the app's hierarchy?",
+                            "options": {
+                                "A":"It's a sub-screen within a 'Rings' section",
+                                "B":"It's the main dashboard of the app",
+                                "C":"It's a sub-screen within the 'Summary' section",
+                                "D":"It's a standalone 'Awards' page accessible from anywhere",
+                                "E":"It's the 'Sharing' section of the app"
+                            },
+                            "answer": "C",
+                            "explanation": "The green back arrow at the top left with 'Summary' indicates this is a sub-screen within the Summary section. The bottom navigation also shows 'Summary' highlighted, confirming we're in a sub-page (specifically 'Awards') within the Summary section, not on the main Summary page itself.",
+                            "difficulty": "easy"
+                            "image_size":[
+                                1179,
+                                2556
+                            ],
+                            "platform":"os_ios",
+                            "app_name":"Fitness"
+                    }
+
+                    An example for level2:
+                    line={
+                            "index":0,
+                            "image_path":"os_windows/0b08bd98_a0e7b2a5_68e346390d562be39f55c1aa7db4a5068d16842c0cb29bd1c6e3b49292a242d1.png",
+                            "instruction":"The downward arrow button allows you to scroll down through the list of years.",
+                            "bbox":[
+                                0.3875,
+                                0.1361,
+                                0.3945,
+                                0.1507
+                            ],
+                            "image_size":[
+                                2560,
+                                1440
+                            ],
+                            "data_type":"icon",
+                            "platform":"os_windows",
+                            "app_name":"calendar",
+                            "grounding_type":"basic"
+                    }
+        dataset (str), the name of the benchmark. It can be used to determine different prompt format for different task.
+                        It should be one of ["GUIElementGrounding", "GUIContentUnderstanding", "GUITaskAutomation", "GUITaskCollaboration": ,']
+    Returns:
+        msgs (list[dict]): inputs to model. It will be processed by preprocess_uitars provided by this file after some nessaccery checking.
+    """
     msgs = []
 
     tgt_path = os.path.join(
-        "/mnt/petrelfs/wangxuehui/project/computer_use/MMBench-GUI/release/offline_images",
+        (
+            os.environ["IMAGE_ROOT_DIR"]
+            if os.path.exists(os.environ.get("IMAGE_ROOT_DIR", ""))
+            else f"{LMUDataRoot()}/MMBench-GUI/offline_images"
+        ),
         line["image_path"],
     )
     instruction = line["instruction"]
@@ -151,7 +209,15 @@ def build_custom_prompt(line, dataset):
 
 
 def parse_grounding_response(response, meta):
+    """Parse coordinates from model's response for evaluation
 
+    Args:
+        response (str), response from model. It is also the outputs of postprocess_uitars or our default postprocess function.
+        meta (dict), original data from dataloader.
+
+    Returns:
+        parsed_predicted_point (list, None): The parsed coordinates of your prediction.
+    """
     click_point = re.findall(r"\d+", response)
     if len(click_point) == 2:
         click_point = [int(x) for x in click_point]
@@ -161,9 +227,14 @@ def parse_grounding_response(response, meta):
 
 
 def parse_understanding_response(response, meta):
-    """
-    Default parse function for the response.
-    It should be overridden by the user if needed.
+    """Default parse function for the response. It should be overridden by the user if needed.
+
+    Args:
+        response (str), response from model. It is also the outputs of postprocess_uitars or our default postprocess function.
+        meta (dict), original data from dataloader.
+
+    Returns:
+        match (str, None): The parsed option which is a single alphabet, for example, "B".
     """
     match = parser_answers_into_option(response)
     if match:
