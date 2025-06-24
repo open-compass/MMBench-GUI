@@ -4,7 +4,7 @@
 
 Recent advances in large language models (LLMs) have significantly enhanced graphical user interface (GUI) agents. However, current benchmarks predominantly evaluate isolated tasks, leaving critical questions unanswered about cross-task correlations, performance-efficiency relationships, platform-specific differences, and primary bottlenecks.
 
-MMBench-GUI, a hierarchical, multi-platform benchmarking framework, is introducted to address these gaps. MMBench-GUI is comprising four evaluation levels: GUI Content Understanding, GUI Element Grounding, GUI Task Automation, and GUI Task Collaboration. We also propose the Efficiency–Quality Area (EQA) metric, integrating accuracy and efficiency. MMBench-GUI provides a rigorous standard for evaluating and guiding future developments in GUI agent capabilities.
+MMBench-GUI, a hierarchical, multi-platform benchmarking framework, is introducted to address these gaps. MMBench-GUI is comprising four evaluation levels: GUI Content Understanding, GUI Element Grounding, GUI Task Automation, and GUI Task Collaboration. We also propose the Efficiency–Quality Area (EQA) metric for agent navigation, integrating accuracy and efficiency. MMBench-GUI provides a rigorous standard for evaluating and guiding future developments in GUI agent capabilities.
 
 MMBench-GUI is developed based on [VLMEvalkit](https://github.com/open-compass/VLMEvalKit), supporting the evaluation of models in a API manner or local deployment manner. We hope that MMBench-GUI will enable more researchers to evaluate agents more efficiently and comprehensively. You can refer to the [How-to-Use](#how-to-use) section for usage details.
 
@@ -25,8 +25,8 @@ MMBench-GUI is developed based on [VLMEvalkit](https://github.com/open-compass/V
 
 ## 🪧 News
 
-* 2025.06.24 We have released the refactoring code for level1-GUI Content Understanding and level2-GUI Element Grounding tasks. Next, tasks of level3 and level4 will also be integrated into this codebase.
-* 2025.06.24 We have released the images and json files used in level1-GUI Content Understanding and level2-GUI Element Grounding tasks. Resources of level3 and level4 will be release in the next one or two weeks.
+* **2025.06.24** We have released the refactoring code for level1-GUI Content Understanding and level2-GUI Element Grounding tasks. Next, tasks of level3 and level4 will also be integrated into this codebase.
+* **2025.06.24** We have released the images and json files used in level1-GUI Content Understanding and level2-GUI Element Grounding tasks. Resources of level3 and level4 will be release in the next one or two weeks.
 
 ## Performance
 
@@ -74,7 +74,7 @@ Once the `data` flows out from the `dataloader`, the inference pipeline is divid
 
 After these steps, the evaluations of `responses` are conducted using `our_benchmark.evaluate`. In this process, all you need is to provide (or use our default implementation) a customized function to parse key informations.
 
-**Based on above instruction, you are only required to implement a `custom_build_prompt`, a 'preprocess_func', a `preprocess_func`, and a `parse_response_func`. We have achieved a default function to handle these processes and if you do not have special format to be configured, you even DO NOT need to write these four functions!**
+**Based on above instruction, you are only required to implement a `custom_build_prompt`, a `preprocess_func', a `postprocess_func`, and a `parse_response_func`. We have achieved a default function to handle these processes and if you do not have special format to be configured, you even DO NOT need to write these four functions!**
 
 #### The architecture of our code
 
@@ -110,5 +110,293 @@ MMBench-GUI/
 |-- requirements.txt                    // You know
 `-- evaluate.py                         // Run this file to start your evaluation.
 
+```
+
+#### Development guidance
+
+> [!TIP]
+> We highly recommend you to refer the example implementations in `models.local_uitars`, `models.api_uitars` for details. You can copy these files, rename them and then write your functions.
+
+Next, we introduce the integrating of UI-TARS-1.5 as an example.
+
+1. Clone this repo
+
+```shell
+git clone xxxx
+```
+
+2. Create a python file in `models`. For example: `local_uitars.py`.
+
+```shell
+cd MMBench-GUI
+touch models/local_uitars.py
+```
+
+3. Implement relevant functionalities as needed. We assume that the model to be evaluated may have its own unique prompt format, tokenization process, post-processing steps, and result parsing method. However, in most cases, the differences between models lie primarily in the system and user prompts, as well as in how the results are parsed.
+
+    - implement `custom_build_prompt` function (the function name is not restricted). In this implementation, we only customize user prompt and use default prompt of UI-TARS model.
+    ```python
+    def build_custom_prompt(line, dataset):
+        """
+        Build prompts as you need. 
+
+        Args:
+            line (dict), original data from dataloader.
+                        An example for level1:
+                        line={
+                                "index":0,
+                                "image_path": "os_ios/9e304d4e_5fdc3924_51c74094e7e217f384edd0d882ea6fb19b839ddc029893daa6dd17fafb49b3d6.png",
+                                "question": "Based on the navigation elements, what can be inferred about the current screen's position in the app's hierarchy?",
+                                "options": {
+                                    "A":"It's a sub-screen within a 'Rings' section",
+                                    "B":"It's the main dashboard of the app",
+                                    "C":"It's a sub-screen within the 'Summary' section",
+                                    "D":"It's a standalone 'Awards' page accessible from anywhere",
+                                    "E":"It's the 'Sharing' section of the app"
+                                },
+                                "answer": "C",
+                                "explanation": "The green back arrow at the top left with 'Summary' indicates this is a sub-screen within the Summary section. The bottom navigation also shows 'Summary' highlighted, confirming we're in a sub-page (specifically 'Awards') within the Summary section, not on the main Summary page itself.",
+                                "difficulty": "easy"
+                                "image_size":[
+                                    1179,
+                                    2556
+                                ],
+                                "platform":"os_ios",
+                                "app_name":"Fitness"
+                        }
+
+                        An example for level2:
+                        line={
+                                "index":0,
+                                "image_path":"os_windows/0b08bd98_a0e7b2a5_68e346390d562be39f55c1aa7db4a5068d16842c0cb29bd1c6e3b49292a242d1.png",
+                                "instruction":"The downward arrow button allows you to scroll down through the list of years.",
+                                "bbox":[
+                                    0.3875,
+                                    0.1361,
+                                    0.3945,
+                                    0.1507
+                                ],
+                                "image_size":[
+                                    2560,
+                                    1440
+                                ],
+                                "data_type":"icon",
+                                "platform":"os_windows",
+                                "app_name":"calendar",
+                                "grounding_type":"basic"
+                        }
+            dataset (str), the name of the benchmark. It can be used to determine different prompt format for different task.
+                            It should be one of ["GUIElementGrounding", "GUIContentUnderstanding", "GUITaskAutomation", "GUITaskCollaboration": ,']
+        Returns:
+            msgs (list[dict]): inputs to model. It will be processed by preprocess_uitars provided by this file after some nessaccery checking.
+                                It should follow this format:
+                                [
+                                    {'role': 'xxxxx', 'type': 'image/text', value: 'xxxxx},
+                                    {'role': 'xxxxx', 'type': 'image/text', value: 'xxxxx},
+                                    ...
+                                    {'role': 'xxxxx', 'type': 'image/text', value: 'xxxxx}
+                                ]
+
+        """
+        msgs = []
+
+        tgt_path = os.path.join(
+            "path/to/image/dir",
+            line["image_path"],
+        )
+        instruction = line["instruction"]
+
+        if dataset == "GUIElementGrounding":
+            msgs.append({"role": "user", "type": "image", "value": f"{tgt_path}"})
+
+            msgs.append(
+                {
+                    "role": "user",
+                    "type": "text",
+                    "value": GROUNDING_user_prompt.format(instruction=instruction),
+                }
+            )
+            return msgs
+        elif dataset == "GUIContentUnderstanding":
+            msgs.append({"role": "user", "type": "image", "value": f"{tgt_path}"})
+
+            msgs.append(
+                {
+                    "role": "user",
+                    "type": "text",
+                    "value": QA_user_prompt.format(instruction=instruction),
+                }
+            )
+            return msgs
+        else:
+            pass
+    ```
+
+    - implement `preprocess_uitars` function to process the outputs of `build_custom_prompt` (the function name is not restricted)
+    ```python
+    def preprocess_uitars(message, model, processor, **kwargs):
+        """
+        Process message into input_ids, attn_masks, etc.
+
+        Args:
+            message (list[dict])
+                    An example:
+                        message = [
+                            dict(role='system', type='text', value='You are an agent.'),
+                            dict(role='user', type='image', value='path/to/your/image.png'),
+                            dict(role='user', type='text', value='your user prompt')
+                        ]
+                    The system prompt is optional and it's determined by your setting.
+            model (LocalModelWrapper, ApiModelWrapper), this is used to get any variables or functions you need from model
+            processor (transformers.AutoProcessor), this is used to get any variables or functions you need from processor
+            kwargs (optional), parameters provided in your config: `models.your_model_name.kwargs`
+
+        Returns:
+            inputs (dict, BatchFeature): outputs from processor
+
+        """
+        from qwen_vl_utils import process_vision_info
+
+        messages = []
+        if "system" == message[0]["role"]:                                              # append system_prompt if exists. In our implementation, this will be skipped since we use default system prompt of UI-TARS
+            messages.append({"role": "system", "content": message[0]["value"]})
+            message = message[1:]
+        messages.append(
+            {"role": "user", "content": prepare_content(message, processor, **kwargs)}  # append user prompt and image url/path using `prepare_content` function, we omit this here and you can refer to `models.local_ui_tars.py` for details.
+        )
+
+        text = processor.apply_chat_template(                                           # apply chat template. The processor is built by AutoProcessor.from_pretrained in our benchmark. Thus, you can directly call the function.
+            [messages], tokenize=False, add_generation_prompt=True
+        )
+
+        images, videos = process_vision_info([messages])                                # process image represented by url/path into base64 or PIL.Image
+        inputs = processor(                                                             # call processor to generate inputs.
+            text=text, images=images, videos=videos, padding=True, return_tensors="pt"
+        )
+        inputs = inputs.to("cuda")
+
+        return inputs
+    ```
+
+    - implement `postprocess_uitars` function to process the output of model (the function name is not restricted). 
+    ```python
+    def postprocess_uitars(outputs, model, processor, **kwargs):
+    """
+    Process outputs into response.
+
+    Args:
+        outputs (Tensor, tuple[Tensor]), the outputs from your model, it should be decode to obtain predicted texts.
+        model (LocalModelWrapper, ApiModelWrapper), this is used to get any variables or functions you need from model
+        processor (transformers.AutoProcessor), this is used to get any variables or functions you need from processor
+        kwargs (optional), parameters provided in your config: `models.your_model_name.kwargs`
+
+    Returns:
+        resp (str): response from your model
+
+    """
+    if isinstance(outputs, tuple):
+        outputs = outputs[0]
+    if isinstance(outputs, torch.Tensor):
+        outputs = outputs.cpu().numpy()
+    out = processor.batch_decode(                                               # decode outputs of model
+        outputs, skip_special_tokens=True, clean_up_tokenization_spaces=True
+    )
+
+    response = out[0]
+    resp = response.split("assistant\n")[-1]                                    # extract the part of assistant
+    return resp                                                                 # example: resp = "Action: click(point=[23,67])"
+    ```
+
+    - implement `parsing_function` to parse the outputs of `postprocess_uitars` into required format (the function name is not restricted).
+    ```python
+    def parse_grounding_response(response, meta):
+    """Parse coordinates from model's response for evaluation
+
+    Args:
+        response (str), response from model. It is also the outputs of postprocess_uitars or our default postprocess function.
+        meta (dict), original data from dataloader.
+
+    Returns:
+        parsed_predicted_point (list, None): The parsed coordinates of your prediction.
+    """
+    click_point = re.findall(r"\d+", response)
+    if len(click_point) == 2:
+        click_point = [int(x) for x in click_point]
+        parsed_predicted_point = uitars_postprocess(                            # UI-TARS follows the coordinates transformation of Qwen2.5VL
+            click_point, ast.literal_eval(meta["image_size"])
+        )
+        return parsed_predicted_point                                           # valid output = [23, 67]
+    else:
+        return None
+    ```
+
+4. Create a config file `config_local_uitars.json` in `configs`
+
+```shell
+touch configs/config_local_uitars.json
+```
+    and write relavant informations, such as the path of customized functions, parameters.
+
+```json
+{
+    "model": {                                                                      // configurations for model
+        "uitars-1.5-7b-local": {
+            "model_path": "/path/of/your/checkpoints/UI-TARS-1.5-7B",
+            "generate_cfg": {                                                       // This parameter will be passed into LocalModelWrapper.your_model.generate or APIModelWrapper.client.chat.completions.create
+                "max_new_tokens": 512
+            },
+            "imp_type": "transformers",                                             // Currently, we only support transformers and api mode.
+            "generate_function": "generate",                                        // Most models follow the design of transformers, and thus this parameter do not need to be modified.
+            "preprocess_function": "models.local_uitars.preprocess_uitars",         // The path of our customized function `preprocess_uitars` in the file we created in step 3.
+            "postprocess_function": "models.local_uitars.postprocess_uitars",       // The path of our customized function `postprocess_function` in the file we created in step 3.
+            "custom_prompt": {                                                      // This can determine which task will use custom prompt and will call your function implemented in step 3.
+                "GUIElementGrounding": "models.local_uitars.build_custom_prompt"    // For example, we only build custom prompt for GUIElementGrounding task. Therefore, the prompt for GUIContentUnderstanding will be built by default function in `benchmarks.l1_content_understanding.py`
+            },
+            "kwargs": {                                                             // These args can be fetched in your customized functions and you are free to use.
+                "system_prompt": "model_default",                                   // IMPORTANT. There are three mode: ['model_default', 'benchmark_defaylt', 'directly write your system prompt']. Details of these modes can refer to xxxx
+                "max_pixels": 2116800,
+                "min_pixels": 3136,
+                "img_size": -1,
+                "img_detail": "low"
+            }
+        }
+    },
+    "data": {                                                                       // configurations for benchmark
+        "GUIElementGrounding": {
+            "mode": "all",                                                          // usable mode: ['all', 'basic', 'advanced']. When mode='all', both 'basic' and 'advanced' splits will be evaluated.
+            "parse_function": "models.local_uitars.parse_grounding_response"        // The customized parsing function we implemented in step 3.
+        },
+        "GUIContentUnderstanding": {
+            "mode": "all",                                                          // available mode: ['all', 'easy', 'medium', 'hard']
+            "parse_function": "models.local_uitars.parse_understanding_response",
+            "match_mode": "exact_match"                                             // Currently, we don't support judge model to check whether the predicted option matchs the GT in level 1. We provide a strong regex pattern to extract options in our code and we find it works well.,
+        }
+    }
+}
+```
+
+5. Start evaluation and the output dir is defined in `.env` file through the `EVAL_WORK_DIR` variable.
+
+```shell
+python evaluate.py --config configs/config_local_uitars.py
+```
+
+    Our code is based on VLMEvalkit, thus the root path of data can be defined with the `LMUData`:
+
+```shell
+LMUData=/mnt/hwfile/any/dir/LMUData python evaluate.py --config configs/config_local_uitars.py
+```
+
+#### Common issues
+
+Coming soon!
+
+## Acknowledgement
+
+## Citation
+
+If you find our paper and code useful in your research, please consider giving a star :star: and citation :pencil: :)
+
+```Bibtex
 
 ```
