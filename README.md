@@ -354,7 +354,7 @@ and write relavant informations, such as the path of customized functions, param
                 "GUIElementGrounding": "models.local_uitars.build_custom_prompt"    // For example, we only build custom prompt for GUIElementGrounding task. Therefore, the prompt for GUIContentUnderstanding will be built by default function in `benchmarks.l1_content_understanding.py`
             },
             "kwargs": {                                                             // These args can be fetched in your customized functions and you are free to use.
-                "system_prompt": "model_default",                                   // IMPORTANT. There are three mode: ['model_default', 'benchmark_defaylt', 'directly write your system prompt']. Details of these modes can refer to xxxx
+                "system_prompt": "model_default",                                   // IMPORTANT. There are three mode: ['model_default', 'benchmark_defaylt', 'directly write your system prompt']. Details of these modes can refer to below note.
                 "max_pixels": 2116800,
                 "min_pixels": 3136,
                 "img_size": -1,
@@ -375,6 +375,10 @@ and write relavant informations, such as the path of customized functions, param
     }
 }
 ```
+
+> [!WARNING]
+> custom_prompt and kwargs['system_prompt']?
+> coming soon
 
 5. Start evaluation and the output dir is defined in `.env` file through the `EVAL_WORK_DIR` variable.
 
