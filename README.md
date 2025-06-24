@@ -123,7 +123,7 @@ Next, we introduce the integrating of UI-TARS-1.5 as an example.
 1. Clone this repo
 
 ```shell
-git clone xxxx
+git clone https://github.com/open-compass/MMBench-GUI.git
 ```
 
 2. Create a python file in `models`. For example: `local_uitars.py`.
@@ -143,60 +143,60 @@ touch models/local_uitars.py
 
         Args:
             line (dict), original data from dataloader.
-                        An example for level1:
-                        line={
-                                "index":0,
-                                "image_path": "os_ios/9e304d4e_5fdc3924_51c74094e7e217f384edd0d882ea6fb19b839ddc029893daa6dd17fafb49b3d6.png",
-                                "question": "Based on the navigation elements, what can be inferred about the current screen's position in the app's hierarchy?",
-                                "options": {
-                                    "A":"It's a sub-screen within a 'Rings' section",
-                                    "B":"It's the main dashboard of the app",
-                                    "C":"It's a sub-screen within the 'Summary' section",
-                                    "D":"It's a standalone 'Awards' page accessible from anywhere",
-                                    "E":"It's the 'Sharing' section of the app"
-                                },
-                                "answer": "C",
-                                "explanation": "The green back arrow at the top left with 'Summary' indicates this is a sub-screen within the Summary section. The bottom navigation also shows 'Summary' highlighted, confirming we're in a sub-page (specifically 'Awards') within the Summary section, not on the main Summary page itself.",
-                                "difficulty": "easy"
-                                "image_size":[
-                                    1179,
-                                    2556
-                                ],
-                                "platform":"os_ios",
-                                "app_name":"Fitness"
-                        }
+                An example for level1:
+                line={
+                        "index":0,
+                        "image_path": "os_ios/9e304d4e_5fdc3924_51c74094e7e217f384edd0d882ea6fb19b839ddc029893daa6dd17fafb49b3d6.png",
+                        "question": "Based on the navigation elements, what can be inferred about the current screen's position in the app's hierarchy?",
+                        "options": {
+                            "A":"It's a sub-screen within a 'Rings' section",
+                            "B":"It's the main dashboard of the app",
+                            "C":"It's a sub-screen within the 'Summary' section",
+                            "D":"It's a standalone 'Awards' page accessible from anywhere",
+                            "E":"It's the 'Sharing' section of the app"
+                        },
+                        "answer": "C",
+                        "explanation": "The green back arrow at the top left with 'Summary' indicates this is a sub-screen within the Summary section. The bottom navigation also shows 'Summary' highlighted, confirming we're in a sub-page (specifically 'Awards') within the Summary section, not on the main Summary page itself.",
+                        "difficulty": "easy"
+                        "image_size":[
+                            1179,
+                            2556
+                        ],
+                        "platform":"os_ios",
+                        "app_name":"Fitness"
+                }
 
-                        An example for level2:
-                        line={
-                                "index":0,
-                                "image_path":"os_windows/0b08bd98_a0e7b2a5_68e346390d562be39f55c1aa7db4a5068d16842c0cb29bd1c6e3b49292a242d1.png",
-                                "instruction":"The downward arrow button allows you to scroll down through the list of years.",
-                                "bbox":[
-                                    0.3875,
-                                    0.1361,
-                                    0.3945,
-                                    0.1507
-                                ],
-                                "image_size":[
-                                    2560,
-                                    1440
-                                ],
-                                "data_type":"icon",
-                                "platform":"os_windows",
-                                "app_name":"calendar",
-                                "grounding_type":"basic"
-                        }
+                An example for level2:
+                line={
+                        "index":0,
+                        "image_path":"os_windows/0b08bd98_a0e7b2a5_68e346390d562be39f55c1aa7db4a5068d16842c0cb29bd1c6e3b49292a242d1.png",
+                        "instruction":"The downward arrow button allows you to scroll down through the list of years.",
+                        "bbox":[
+                            0.3875,
+                            0.1361,
+                            0.3945,
+                            0.1507
+                        ],
+                        "image_size":[
+                            2560,
+                            1440
+                        ],
+                        "data_type":"icon",
+                        "platform":"os_windows",
+                        "app_name":"calendar",
+                        "grounding_type":"basic"
+                }
             dataset (str), the name of the benchmark. It can be used to determine different prompt format for different task.
                             It should be one of ["GUIElementGrounding", "GUIContentUnderstanding", "GUITaskAutomation", "GUITaskCollaboration": ,']
         Returns:
             msgs (list[dict]): inputs to model. It will be processed by preprocess_uitars provided by this file after some nessaccery checking.
-                                It should follow this format:
-                                [
-                                    {'role': 'xxxxx', 'type': 'image/text', value: 'xxxxx},
-                                    {'role': 'xxxxx', 'type': 'image/text', value: 'xxxxx},
-                                    ...
-                                    {'role': 'xxxxx', 'type': 'image/text', value: 'xxxxx}
-                                ]
+                It should follow this format:
+                [
+                    {'role': 'xxxxx', 'type': 'image/text', value: 'xxxxx},
+                    {'role': 'xxxxx', 'type': 'image/text', value: 'xxxxx},
+                    ...
+                    {'role': 'xxxxx', 'type': 'image/text', value: 'xxxxx}
+                ]
 
         """
         msgs = []
