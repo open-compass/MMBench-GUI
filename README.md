@@ -281,53 +281,53 @@ touch models/local_uitars.py
     - implement `postprocess_uitars` function to process the output of model (the function name is not restricted). 
     ```python
     def postprocess_uitars(outputs, model, processor, **kwargs):
-    """
-    Process outputs into response.
+        """
+        Process outputs into response.
 
-    Args:
-        outputs (Tensor, tuple[Tensor]), the outputs from your model, it should be decode to obtain predicted texts.
-        model (LocalModelWrapper, ApiModelWrapper), this is used to get any variables or functions you need from model
-        processor (transformers.AutoProcessor), this is used to get any variables or functions you need from processor
-        kwargs (optional), parameters provided in your config: `models.your_model_name.kwargs`
+        Args:
+            outputs (Tensor, tuple[Tensor]), the outputs from your model, it should be decode to obtain predicted texts.
+            model (LocalModelWrapper, ApiModelWrapper), this is used to get any variables or functions you need from model
+            processor (transformers.AutoProcessor), this is used to get any variables or functions you need from processor
+            kwargs (optional), parameters provided in your config: `models.your_model_name.kwargs`
 
-    Returns:
-        resp (str): response from your model
+        Returns:
+            resp (str): response from your model
 
-    """
-    if isinstance(outputs, tuple):
-        outputs = outputs[0]
-    if isinstance(outputs, torch.Tensor):
-        outputs = outputs.cpu().numpy()
-    out = processor.batch_decode(                                               # decode outputs of model
-        outputs, skip_special_tokens=True, clean_up_tokenization_spaces=True
-    )
+        """
+        if isinstance(outputs, tuple):
+            outputs = outputs[0]
+        if isinstance(outputs, torch.Tensor):
+            outputs = outputs.cpu().numpy()
+        out = processor.batch_decode(                                               # decode outputs of model
+            outputs, skip_special_tokens=True, clean_up_tokenization_spaces=True
+        )
 
-    response = out[0]
-    resp = response.split("assistant\n")[-1]                                    # extract the part of assistant
-    return resp                                                                 # example: resp = "Action: click(point=[23,67])"
+        response = out[0]
+        resp = response.split("assistant\n")[-1]                                    # extract the part of assistant
+        return resp                                                                 # example: resp = "Action: click(point=[23,67])"
     ```
 
     - implement `parsing_function` to parse the outputs of `postprocess_uitars` into required format (the function name is not restricted).
     ```python
     def parse_grounding_response(response, meta):
-    """Parse coordinates from model's response for evaluation
+        """Parse coordinates from model's response for evaluation
 
-    Args:
-        response (str), response from model. It is also the outputs of postprocess_uitars or our default postprocess function.
-        meta (dict), original data from dataloader.
+        Args:
+            response (str), response from model. It is also the outputs of postprocess_uitars or our default postprocess function.
+            meta (dict), original data from dataloader.
 
-    Returns:
-        parsed_predicted_point (list, None): The parsed coordinates of your prediction.
-    """
-    click_point = re.findall(r"\d+", response)
-    if len(click_point) == 2:
-        click_point = [int(x) for x in click_point]
-        parsed_predicted_point = uitars_postprocess(                            # UI-TARS follows the coordinates transformation of Qwen2.5VL
-            click_point, ast.literal_eval(meta["image_size"])
-        )
-        return parsed_predicted_point                                           # valid output = [23, 67]
-    else:
-        return None
+        Returns:
+            parsed_predicted_point (list, None): The parsed coordinates of your prediction.
+        """
+        click_point = re.findall(r"\d+", response)
+        if len(click_point) == 2:
+            click_point = [int(x) for x in click_point]
+            parsed_predicted_point = uitars_postprocess(                            # UI-TARS follows the coordinates transformation of Qwen2.5VL
+                click_point, ast.literal_eval(meta["image_size"])
+            )
+            return parsed_predicted_point                                           # valid output = [23, 67]
+        else:
+            return None
     ```
 
 4. Create a config file `config_local_uitars.json` in `configs`
