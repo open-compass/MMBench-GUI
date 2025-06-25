@@ -138,7 +138,7 @@ DATA_ROOT/                              // We use LMUData in VLMEvalkit as defau
 > [!TIP]
 > We highly recommend you to refer the example implementations in `models.local_uitars` and `models.api_uitars`, and corresponding config files in `configs/config_local_uitars.json` and `configs/config_api_uitars.json`, respectively, for details. You can copy these files, rename them and then write your functions.
 
-Next, we introduce the integrating of **UI-TARS-1.5** as an example.
+Next, we introduce the integrating of **UI-TARS-1.5** with local deployment manner as an example.
 
 1. Clone this repo
 
@@ -361,8 +361,10 @@ and write relavant informations, such as the path of customized functions, param
 ```json
 {
     // configurations for model
-    "model": {                                                                      
+    "model": {
+        // Your model name. This is an identifier for logging.                                                                
         "uitars-1.5-7b-local": {
+            // If you use api-based model, this parameter should be: base_url?api_key=xxx&model=xxx. For example:  "https://api.openai.com/v1?api_key=your-api-key=gpt-4o"
             "model_path": "/path/of/your/checkpoints/UI-TARS-1.5-7B",
 
             // This parameter will be passed into LocalModelWrapper.your_model.generate or APIModelWrapper.client.chat.completions.create
