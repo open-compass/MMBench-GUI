@@ -1,7 +1,7 @@
 # 🖥️ MMBench-GUI: Hierarchical Multi-Platform Evaluation Framework for GUI Agents
 
 > [!NOTE]
-> Our technical report will be released on arxiv.org *in next week* after finishing the twice validation of evaluation results we have obtained one month ago.
+> Our technical report will be released on arXiv *in next week*.
 
 
 ## 📖 Introduction
