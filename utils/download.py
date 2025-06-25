@@ -17,9 +17,9 @@ logger = get_logger("MMBench-GUI")
 
 FILES = [
     {
-        "name": "MMBench-GUI-OfflineImages.tar",
+        "name": "MMBench-GUI-OfflineImages.zip",
         "md5": "8a34d69f0e9c0c450a48bfc1c90b65d5",
-        "type": "tar",
+        "type": "zip",
     },
     {
         "name": "L1_annotations.json",
@@ -248,7 +248,7 @@ if __name__ == "__main__":
     # Example
     root_dir = os.environ['LMUData']
     for file in FILES:
-        url = f"https://huggingface.co/datasets/huiserwang/MMBench-GUI/resolve/main/{file['name']}"
+        url = f"http://opencompass.openxlab.space/utils/benchmarks/MMBenchGUI/{file['name']}"
         download_path = os.path.join(
             root_dir, "MMBench-GUI", f"{file['name']}"
         )
@@ -267,7 +267,7 @@ if __name__ == "__main__":
                     logger.error(f"MD5: {file_hash} unmatch! Please check it!")
 
             if file["type"] != "json":
-                logger.info("Remove downloaded .tar file to save disk")
+                logger.info("Remove downloaded .zip file to save disk")
                 os.remove(download_path)
 
             logger.info("🎉 All done!")
