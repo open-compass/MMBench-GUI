@@ -208,7 +208,7 @@ def build_custom_prompt(line, dataset):
 
     Args:
         line (dict), original data from dataloader.
-                    An example for level1:
+                    An example for L1:
                     line={
                             "index":0,
                             "image_path": "os_ios/9e304d4e_5fdc3924_51c74094e7e217f384edd0d882ea6fb19b839ddc029893daa6dd17fafb49b3d6.png",
@@ -231,7 +231,7 @@ def build_custom_prompt(line, dataset):
                             "app_name":"Fitness"
                     }
 
-                    An example for level2:
+                    An example for L2:
                     line={
                             "index":0,
                             "image_path":"os_windows/0b08bd98_a0e7b2a5_68e346390d562be39f55c1aa7db4a5068d16842c0cb29bd1c6e3b49292a242d1.png",

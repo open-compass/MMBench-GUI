@@ -111,7 +111,7 @@ touc hmodels/local_uitars.py
 
        Args:
            line (dict), original data from dataloader.
-               An example for level1:
+               An example for L1:
                line={
                        "index":0,
                        "image_path": "os_ios/9e304d4e_5fdc3924_51c74094e7e217f384edd0d882ea6fb19b839ddc029893daa6dd17fafb49b3d6.png",
@@ -134,7 +134,7 @@ touc hmodels/local_uitars.py
                        "app_name":"Fitness"
                }
 
-               An example for level2:
+               An example for L2:
                line={
                        "index":0,
                        "image_path":"os_windows/0b08bd98_a0e7b2a5_68e346390d562be39f55c1aa7db4a5068d16842c0cb29bd1c6e3b49292a242d1.png",
@@ -379,7 +379,7 @@ and write relavant informations, such as the path of customized functions, param
 
             "parse_function": "models.local_uitars.parse_understanding_response",
 
-            // Currently, we don't support judge model to check whether the predicted option matchs the GT in level 1. We provide a strong regex pattern to extract options in our code and we find it works well.,
+            // Currently, we don't support judge model to check whether the predicted option matchs the GT in L1. We provide a strong regex pattern to extract options in our code and we find it works well.,
             "match_mode": "exact_match"                                          
         }
     }

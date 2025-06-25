@@ -1,5 +1,9 @@
 # 🖥️ MMBench-GUI: Hierarchical Multi-Platform Evaluation Framework for GUI Agents
 
+<p align="center">
+🤗 <a href="https://huggingface.co/datasets/OpenGVLab/MMBench-GUI">Evaluation Data</a>&nbsp&nbsp | &nbsp&nbsp📑 <a href="#">Paper (coming soon)</a>&nbsp&nbsp | &nbsp&nbsp📢 <a href="#">Leaderboard (coming soon)</a>
+</p>
+
 > [!NOTE]
 > Our technical report will be released on arXiv *in next week*.
 
@@ -10,20 +14,20 @@ We are happy to release MMBench-GUI, a hierarchical, multi-platform benchmark fr
 
 MMBench-GUI is developed based on [VLMEvalkit](https://github.com/open-compass/VLMEvalKit), supporting the evaluation of models in a API manner or local deployment manner. We hope that MMBench-GUI will enable more researchers to evaluate agents more efficiently and comprehensively. You can refer to the [How-to-Use](#how-to-integrate) section for detailed usage.
 
-![level1_example](./assets/level1_example.png)
+![level1_example](./assets/L1_example.png)
 
-![level2_example](./assets/level2_example.png)
+![level2_example](./assets/L2_example.png)
 
-![level3_example](./assets/level3_example.png)
+![level3_example](./assets/L3_example.png)
 
-![level4_example](./assets/level4_example.png)
+![level4_example](./assets/L4_example.png)
 
 <p align="center">Examples of each level of tasks</p>
 
 
 ### Features
 
-* **Hierarchical Evaluation**: Motivated by the use of levels L1~L5 in autonomous driving, we developed the hierarchical evaluation framework to systematically and comprehensively assess GUI agents' capabilities. In short, we organize the evaluation framework into four ascending levels.
+* **Hierarchical Evaluation**: We developed a hierarchical evaluation framework to systematically and comprehensively assess GUI agents' capabilities. In short, we organize the evaluation framework into four ascending levels, termed as L1~L4.
 * **Support multi-platform evaluation**: we establish a robust, multi-platform evaluation dataset encompassing diverse operating systems, such as Windows, macOS, Linux, iOS, Android, and Web interfaces, ensuring extensive coverage and relevance to real-world applications.
 * **A more human-aligned evaluation metric for planning**: We value both speed and quality of the agent. Therefore, we propose the Efficiency–Quality Area (EQA) metric that balances accuracy and efficiency, rewarding agents that achieve task objectives with minimal operational step, to replace  Success Rate (SR).
 * **Manually reviewed and optimized online task setup**: We conducted a thorough review of existing online tasks and excluded those that could not be completed due to issues such as network or account restrictions.
@@ -39,8 +43,8 @@ MMBench-GUI is developed based on [VLMEvalkit](https://github.com/open-compass/V
 
 ## 🪧 News
 
-* **2025.06.24** We have released the refactoring code for level1-GUI Content Understanding and level2-GUI Element Grounding tasks. Next, tasks of level3 and level4 will also be integrated into this codebase.
-* **2025.06.24** We have released the images and json files used in level1-GUI Content Understanding and level2-GUI Element Grounding tasks. Resources of level3 and level4 will be released in the next one or two weeks.
+* **2025.06.24** We have released the refactoring code for `L1-GUI Content Understanding` and `L2-GUI Element Grounding` tasks. Next, tasks of `L3-GUI Task Automation` and `L4-GUI Task Collaboration` will also be integrated into this codebase.
+* **2025.06.24** We have released the images and json files used in `L1-GUI Content Understanding` and `L2-GUI Element Grounding` tasks at [HuggingFace](https://huggingface.co/datasets/OpenGVLab/MMBench-GUI).
 
 
 ## Installation and Evaluation
@@ -69,7 +73,7 @@ cd VLMEvalKit
 pip install -e .
 ```
 
-4. （optional) FlashAttention-2 is used to accelerate the inference speed and thus we recommend to install it:
+4. （optional) Flash attention is used to accelerate the inference speed and thus we recommend to install it:
 
 ```shell
 pip install flash-attn==2.7.4.post1 --no-build-isolation
@@ -120,21 +124,21 @@ LMUData=/path/of/data python evaluate.py --config configs/config_local_uitars.py
 
 Results shown in these tables are obtained through API-based manner, and we keep the same parameters for all models.
 
-#### 1. Performance on Level1 - GUI Content Understanding.
+#### 1. Performance on L1-GUI Content Understanding.
 
-![level1](./assets/level1.png)
+![level1](./assets/L1.png)
 
-#### 2. Performance on Level2 - GUI Element Grounding.
+#### 2. Performance on L2-GUI Element Grounding.
 
-![level2](./assets/level2.png)
+![level2](./assets/L2.png)
 
-#### 3. Performance on Level3 - GUI Task Automation.
+#### 3. Performance on L3-GUI Task Automation.
 
-![level3](./assets/level3.png)
+![level3](./assets/L3.png)
 
-#### 4. Performance on Level4 - GUI Task Collaboration.
+#### 4. Performance on L4-GUI Task Collaboration.
 
-![level4](./assets/level4.png)
+![level4](./assets/L4.png)
 
 
 ## ⚙️ How-to-integrate
