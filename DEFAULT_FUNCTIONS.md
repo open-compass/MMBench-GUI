@@ -56,16 +56,14 @@ output format (we enable system prompt for example):
     {
         "role": "user",
         "type": "text",
-        "value": """
-            Question: Based on the navigation elements, what can be inferred about the current screen's position in the app's hierarchy?
-            Options:
-            A. It's a sub-screen within a 'Rings' section
-            B. It's the main dashboard of the app
-            C. It's a sub-screen within the 'Summary' section
-            D. It's a standalone 'Awards' page accessible from anywhere
-            E. It's the 'Sharing' section of the app
-            Please select the correct answer from the options above.
-        """
+        "value": """Question: Based on the navigation elements, what can be inferred about the current screen's position in the app's hierarchy?
+                    Options:
+                    A. It's a sub-screen within a 'Rings' section
+                    B. It's the main dashboard of the app
+                    C. It's a sub-screen within the 'Summary' section
+                    D. It's a standalone 'Awards' page accessible from anywhere
+                    E. It's the 'Sharing' section of the app
+                    Please select the correct answer from the options above."""
     },
 ]
 ```

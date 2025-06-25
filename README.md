@@ -83,32 +83,32 @@ After these steps, the evaluations of `responses` are conducted using `our_bench
 
 ```text
 MMBench-GUI/
-|-- benchmarks                          // We put all levels of benchmarks here
+|-- benchmarks/                          // We put all levels of benchmarks here
 |   |-- __init__.py
 |   |-- l1_content_understanding.py
 |   |-- l2_element_grounding.py
 |   |-- l3_task_automation.py
 |   |-- l4_task_collaboration.py
 |   `-- matrics.py
-|-- models                              // You are allowed to put code relative to your model here.
+|-- models/                              // You are allowed to put code relative to your model here.
 |   |-- __init__.py
 |   |-- api_gpt.py
 |   |-- api_uitars.py                   // One api-based example. We recommend you follow this example to implement your api-based model.
 |   |-- base.py                         // Our model wrapper, including API-based and local-based.
 |   |-- local_aguvis.py
 |   `-- local_uitars.py                 // One local-based example. We recommend you follow this example to implement your local-based model.
-|-- utils
+|-- utils/
 |   |-- __init__.py
 |   |-- download.py                     // You can run this to download and extract images and json files automatically.
 |   |-- import_utils.py
 |   |-- inference_tools.py              // Inference loops, including api-based and local-based.
 |   `-- misc.py
-|-- configs                             // You are allowed to put configs about your model here.
+|-- configs/                             // You are allowed to put configs about your model here.
 |   |-- config_api_gpt.json
 |   |-- config_api_uitars.json          // One api-based config corresponding to models.api_uitars.py
 |   |-- config_local_aguvis.json
 |   `-- config_local_uitars.json        // One local-based config corresponding to models.local_uitars.py
-|-- requirements
+|-- requirements/
 |   `-- dev_env.txt                     // We export the packages details of our development env.
 |-- requirements.txt                    // You know
 `-- evaluate.py                         // Run this file to start your evaluation.
@@ -123,12 +123,14 @@ You can run `LMUData=/path/of/data python utils/download.py` to automaticly down
 DATA_ROOT/                              // We use LMUData in VLMEvalkit as default root dir.
 |-- MMBench-GUI/                          
 |   |-- offline_images/
-|   |-- os_windows/
-|   |   |-- 0b08bd98_a0e7b2a5_68e346390d562be39f55c1aa7db4a5068d16842c0cb29bd1c6e3b49292a242d1.png
-|   |   |-- ...
-|   |-- os_ios/
-|   |-- ...
-|   |-- os_web/
+|   |   |-- os_windows/
+|   |   |   |-- 0b08bd98_a0e7b2a5_68e346390d562be39f55c1aa7db4a5068d16842c0cb29bd1c6e3b49292a242d1.png
+|   |   |   |-- ...
+|   |   |-- os_mac/
+|   |   |-- os_linux/
+|   |   |-- os_ios/
+|   |   |-- os_android/
+|   |   `-- os_web/
 |   |-- L1_annotations.json
 `---|-- L2_annotations.json 
 ```
