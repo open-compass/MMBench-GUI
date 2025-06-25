@@ -48,31 +48,33 @@ MMBench-GUI is developed based on [VLMEvalkit](https://github.com/open-compass/V
 ### Installation
 
 1. Build a conda env (we use cuda=12.4 when developing this project).
+
 ```shell
 conda create -n mmbench-gui python==3.9
 conda activate mmbench-gui
 ```
 
-2. Install torch and flash-attn (optional)
+2. Install torch
+
 ```shell
 pip install tqdm
 pip install torch==2.6.0 torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cu124
-
-#optional
-pip install flash-attn --no-build-isolation
 ```
 
 3. Install VLMEvalkit
+
 ```shell
 git clone https://github.com/open-compass/VLMEvalKit.git
 cd VLMEvalKit
 pip install -e .
 ```
 
-4. Install other packages
+4. （optional) FlashAttention-2 is used to accelerate the inference speed and thus we recommend to install it:
+
 ```shell
-pip install -r requirements.txt
+pip install flash-attn --no-build-isolation
 ```
+
 > [!NOTE]
 > We also provide the environment packages list in requirements/dev_env.txt for reproducing the same env as ours.
 
@@ -105,8 +107,11 @@ LMUData=/path/of/data python utils/download.py
 Here, we evaluate the UI-TARS-1.5-7B model since we have integrated it in our benchmark as an example.
 
 ```shell
+#Single GPU
 LMUData=/path/of/data python evaluate.py --config configs/config_local_uitars.py
 ```
+
+**You can refer to [Development Guidance](./DEVELOPMENT_GUIDANCE.md) for details about how to integrate and evaluate your model with MMBench-GUI.**
 
 ## 📊 Performance
 

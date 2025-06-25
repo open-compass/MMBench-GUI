@@ -2,7 +2,7 @@ torch
 torchvision
 requests
 tqdm
-vlmeval==0.1.0
+git+https://github.com/open-compass/VLMEvalKit.git
 tqdm
 qwen-vl-utils
 timm
@@ -15,4 +15,4 @@ matplotlib
 openai
 pillow
 transformers
-flash-attn #--build-no-isolation
+flash-attn #with --build-no-isolation
