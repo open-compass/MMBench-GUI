@@ -153,7 +153,7 @@ Please refer to [FAQs](./COMMON_ISSUES.md).
 
 ## 🌺 Acknowledgement
 
-We would like to thank the following outstanding works, which provided important references for the development of MMBench-GUI.
+We would like to thank the following great works, which provided important references for the development of MMBench-GUI.
 
 - [VLMEvalkit](https://github.com/open-compass/VLMEvalKit)
 
@@ -168,6 +168,8 @@ We would like to thank the following outstanding works, which provided important
 - [WindowsAgentArena](https://github.com/microsoft/WindowsAgentArena)
 
 - [WebArena](https://github.com/web-arena-x/webarena)
+
+- [Qwen2.5VL](https://github.com/QwenLM/Qwen2.5-VL)
 
 
 ## 📌 Citation
