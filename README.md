@@ -11,10 +11,14 @@ We are happy to release MMBench-GUI, a hierarchical, multi-platform benchmark fr
 MMBench-GUI is developed based on [VLMEvalkit](https://github.com/open-compass/VLMEvalKit), supporting the evaluation of models in a API manner or local deployment manner. We hope that MMBench-GUI will enable more researchers to evaluate agents more efficiently and comprehensively. You can refer to the [How-to-Use](#how-to-use) section for detailed usage.
 
 ![level1_example](./assets/level1_example.png)
+
 ![level2_example](./assets/level2_example.png)
+
 ![level3_example](./assets/level3_example.png)
+
 ![level4_example](./assets/level4_example.png)
-<p style="text-align: center">Examples of each level of tasks</p>
+
+<p align="center">Examples of each level of tasks</p>
 
 
 ### Features
