@@ -246,12 +246,13 @@ def calculate_file_hash(filepath, algorithm="md5"):
 
 if __name__ == "__main__":
     # Example
+    root_dir = os.environ['LMUData']
     for file in FILES:
         url = f"https://huggingface.co/datasets/huiserwang/MMBench-GUI/resolve/main/{file['name']}"
         download_path = os.path.join(
-            "/mnt/petrelfs/wangxuehui", "MMBench-GUI", f"{file['name']}"
+            root_dir, "MMBench-GUI", f"{file['name']}"
         )
-        extract_dir = os.path.join("/mnt/petrelfs/wangxuehui", "MMBench-GUI")
+        extract_dir = os.path.join(root_dir, "MMBench-GUI")
 
         success = download_benchmark_data(url, download_path, extract_dir)
 
