@@ -107,7 +107,7 @@ class GUIContentUnderstanding(ImageBaseDataset):
 
     def load_data(self):
         if not os.path.exists(
-            os.path.join(LMUDataRoot(), "MMBench-GUI", "L1_annotations_mini.json")
+            os.path.join(LMUDataRoot(), "MMBench-GUI", "L1_annotations.json")
         ):
             url = self.DATASET_URL.get("MMBench-GUI_L1", None)
             file_md5 = (
@@ -116,7 +116,7 @@ class GUIContentUnderstanding(ImageBaseDataset):
                 else None
             )
         else:
-            url = os.path.join(LMUDataRoot(), "MMBench-GUI", "L1_annotations_mini.json")
+            url = os.path.join(LMUDataRoot(), "MMBench-GUI", "L1_annotations.json")
             file_md5 = None
 
         return self.prepare_tsv(url, file_md5)

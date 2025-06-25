@@ -84,7 +84,7 @@ class GUIElementGrounding(ImageBaseDataset):
 
     def load_data(self):
         if not os.path.exists(
-            os.path.join(LMUDataRoot(), "MMBench-GUI", "L2_annotations_mini.json")
+            os.path.join(LMUDataRoot(), "MMBench-GUI", "L2_annotations.json")
         ):
             url = self.DATASET_URL.get("MMBench-GUI_L2", None)
             file_md5 = (
@@ -93,7 +93,7 @@ class GUIElementGrounding(ImageBaseDataset):
                 else None
             )
         else:
-            url = os.path.join(LMUDataRoot(), "MMBench-GUI", "L2_annotations_mini.json")
+            url = os.path.join(LMUDataRoot(), "MMBench-GUI", "L2_annotations.json")
             file_md5 = None
 
         return self.prepare_tsv(url, file_md5)
