@@ -72,7 +72,7 @@ pip install -e .
 4. （optional) FlashAttention-2 is used to accelerate the inference speed and thus we recommend to install it:
 
 ```shell
-pip install flash-attn --no-build-isolation
+pip install flash-attn==2.7.4.post1 --no-build-isolation
 ```
 
 > [!NOTE]
