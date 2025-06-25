@@ -3,11 +3,19 @@
 > [!NOTE]
 > Our technical report will be released on arxiv.org *in next week* after finishing the twice validation of evaluation results we have obtained one month ago.
 
+
 ## 📖 Introduction
 
 We are happy to release MMBench-GUI, a hierarchical, multi-platform benchmark framework and toolbox, to evaluate GUI agents. MMBench-GUI is comprising four evaluation levels: GUI Content Understanding, GUI Element Grounding, GUI Task Automation, and GUI Task Collaboration. We also propose the Efficiency–Quality Area (EQA) metric for agent navigation, integrating accuracy and efficiency. MMBench-GUI provides a rigorous standard for evaluating and guiding future developments in GUI agent capabilities.
 
 MMBench-GUI is developed based on [VLMEvalkit](https://github.com/open-compass/VLMEvalKit), supporting the evaluation of models in a API manner or local deployment manner. We hope that MMBench-GUI will enable more researchers to evaluate agents more efficiently and comprehensively. You can refer to the [How-to-Use](#how-to-use) section for detailed usage.
+
+![level1_example](./assets/level1_example.png)
+![level2_example](./assets/level2_example.png)
+![level3_example](./assets/level3_example.png)
+![level4_example](./assets/level4_example.png)
+<p style="text-align: center">Examples of each level of tasks</p>
+
 
 ### Features
 
@@ -37,19 +45,19 @@ Results shown in these tables are obtained through API-based manner, and we keep
 
 #### 1. Performance on Level1 - GUI Content Understanding.
 
-![](./assets/level1.png)
+![level1](./assets/level1.png)
 
 #### 2. Performance on Level2 - GUI Element Grounding.
 
-![](./assets/level2.png)
+![level2](./assets/level2.png)
 
 #### 3. Performance on Level3 - GUI Task Automation.
 
-![](./assets/level3.png)
+![level3](./assets/level3.png)
 
 #### 4. Performance on Level4 - GUI Task Collaboration.
 
-![](./assets/level4.png)
+![level4](./assets/level4.png)
 
 ## ⚙️ How-to-Use
 
