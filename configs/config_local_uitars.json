@@ -1,7 +1,7 @@
 {
     "model": {
         "uitars-1.5-7b-local": {
-            "model_path": "/mnt/petrelfs/wangxuehui/project/computer_use/MMBench-GUI/checkpoint/UI-TARS-1.5-7B",
+            "model_path": "ByteDance-Seed/UI-TARS-1.5-7B",
             "generate_cfg": {
                 "max_new_tokens": 512
             },

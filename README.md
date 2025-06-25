@@ -110,7 +110,8 @@ LMUData=/path/of/data python evaluate.py --config configs/config_local_uitars.py
 
 ## 📊 Performance
 
-> **Note:** We are validating the final results again. Thus, performance of models shown in this table would change and we will update this as soon as possible.
+> [!CAUTION]
+> We are validating the final results again. Thus, performance of models shown in this table would change and we will update this as soon as possible.
 
 Results shown in these tables are obtained through API-based manner, and we keep the same parameters for all models.
 
@@ -130,12 +131,15 @@ Results shown in these tables are obtained through API-based manner, and we keep
 
 ![level4](./assets/level4.png)
 
+
 ## ⚙️ How-to-integrate
 
 Please refer to [Development Guidance](./DEVELOPMENT_GUIDANCE.md).
 
-## ❓ Common issues
-Please refer to [Commen Issues](./COMMON_ISSUES.md).
+
+## ❓ FAQs
+
+Please refer to [FAQs](./COMMON_ISSUES.md).
 
 
 ## 🌺 Acknowledgement
@@ -168,5 +172,4 @@ If you find our paper and code useful in your research, please consider giving a
   note    = {Manuscript in preparation. Code available at \url{https://github.com/open-compass/MMBench-GUI}},
   year    = {2025}
 }
-
 ```

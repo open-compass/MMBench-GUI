@@ -1,4 +1,4 @@
-## ⚙️ How-to-Use
+## ⚙️ How to integrate your model and evaluate it
 
 In this section, we provide detailed instructions on how to use MMBench-GUI to evaluate your model, including the design principle, the architecture of our code, the steps to adapt to your model, and some common issues we think.
 
@@ -23,7 +23,7 @@ Once the `data` flows out from the `dataloader`, the inference pipeline is divid
 
 After these steps, the evaluations of `responses` are conducted using `our_benchmark.evaluate`. In this process, all you need is to provide (or use our default implementation) a customized function to parse key informations.
 
-**Based on above instruction, you are only required to implement a `custom_build_prompt`, a `preprocess_func`, a `postprocess_func`, and a `parse_response_func`. We have achieved [default functions](DEFAULT_FUNCTIONS.md) in our base model and benchmarks to handle these processes and if you do not have special format to be configured, you even DO NOT need to write these four functions!**
+**Based on above instruction, you are only required to implement a `custom_build_prompt`, a `preprocess_func`, a `postprocess_func`, and a `parse_response_func`. We have achieved [default functions](./DEFAULT_FUNCTIONS.md) in our base model and benchmarks to handle these processes and if you do not have special format to be configured, you even DO NOT need to write these four functions!**
 
 #### The architecture of our code
 
@@ -66,7 +66,7 @@ You can run `LMUData=/path/of/data python utils/download.py` to automaticly down
 
 ```text
 DATA_ROOT/                              // We use LMUData in VLMEvalkit as default root dir.
-|-- MMBench-GUI/                        
+|-- MMBench-GUI/                      
 |   |-- offline_images/
 |   |   |-- os_windows/
 |   |   |   |-- 0b08bd98_a0e7b2a5_68e346390d562be39f55c1aa7db4a5068d16842c0cb29bd1c6e3b49292a242d1.png
@@ -102,202 +102,205 @@ touc hmodels/local_uitars.py
 
 3. Implement relevant functionalities as needed. We **assume** that the model to be evaluated may have its *own unique prompt format, tokenization process, post-processing steps, and result parsing method*. However, in most cases, the differences between models lie primarily in the system and user prompts, as well as in how the results are parsed.
 
-    - implement `custom_build_prompt` function (the function name is not strictly restricted). In this implementation, we only customize user prompt and use default system prompt of UI-TARS model.
-    ```python
-    def build_custom_prompt(line, dataset):
-        """
-        Build prompts as you need. 
+   - implement `custom_build_prompt` function (the function name is not strictly restricted). In this implementation, we only customize user prompt and use default system prompt of UI-TARS model.
 
-        Args:
-            line (dict), original data from dataloader.
-                An example for level1:
-                line={
-                        "index":0,
-                        "image_path": "os_ios/9e304d4e_5fdc3924_51c74094e7e217f384edd0d882ea6fb19b839ddc029893daa6dd17fafb49b3d6.png",
-                        "question": "Based on the navigation elements, what can be inferred about the current screen's position in the app's hierarchy?",
-                        "options": {
-                            "A":"It's a sub-screen within a 'Rings' section",
-                            "B":"It's the main dashboard of the app",
-                            "C":"It's a sub-screen within the 'Summary' section",
-                            "D":"It's a standalone 'Awards' page accessible from anywhere",
-                            "E":"It's the 'Sharing' section of the app"
-                        },
-                        "answer": "C",
-                        "explanation": "The green back arrow at the top left with 'Summary' indicates this is a sub-screen within the Summary section. The bottom navigation also shows 'Summary' highlighted, confirming we're in a sub-page (specifically 'Awards') within the Summary section, not on the main Summary page itself.",
-                        "difficulty": "easy"
-                        "image_size":[
-                            1179,
-                            2556
-                        ],
-                        "platform":"os_ios",
-                        "app_name":"Fitness"
-                }
+   ```python
+   def build_custom_prompt(line, dataset):
+       """
+       Build prompts as you need. 
 
-                An example for level2:
-                line={
-                        "index":0,
-                        "image_path":"os_windows/0b08bd98_a0e7b2a5_68e346390d562be39f55c1aa7db4a5068d16842c0cb29bd1c6e3b49292a242d1.png",
-                        "instruction":"The downward arrow button allows you to scroll down through the list of years.",
-                        "bbox":[
-                            0.3875,
-                            0.1361,
-                            0.3945,
-                            0.1507
-                        ],
-                        "image_size":[
-                            2560,
-                            1440
-                        ],
-                        "data_type":"icon",
-                        "platform":"os_windows",
-                        "app_name":"calendar",
-                        "grounding_type":"basic"
-                }
-            dataset (str), the name of the benchmark. It can be used to determine different prompt format for different task.
-                            It should be one of ["GUIElementGrounding", "GUIContentUnderstanding", "GUITaskAutomation", "GUITaskCollaboration": ,']
-        Returns:
-            msgs (list[dict]): inputs to model. It will be processed by preprocess_uitars provided by this file after some nessaccery checking.
-                It should follow this format:
-                [
-                    {'role': 'xxxxx', 'type': 'image/text', value: 'xxxxx},
-                    {'role': 'xxxxx', 'type': 'image/text', value: 'xxxxx},
-                    ...
-                    {'role': 'xxxxx', 'type': 'image/text', value: 'xxxxx}
-                ]
+       Args:
+           line (dict), original data from dataloader.
+               An example for level1:
+               line={
+                       "index":0,
+                       "image_path": "os_ios/9e304d4e_5fdc3924_51c74094e7e217f384edd0d882ea6fb19b839ddc029893daa6dd17fafb49b3d6.png",
+                       "question": "Based on the navigation elements, what can be inferred about the current screen's position in the app's hierarchy?",
+                       "options": {
+                           "A":"It's a sub-screen within a 'Rings' section",
+                           "B":"It's the main dashboard of the app",
+                           "C":"It's a sub-screen within the 'Summary' section",
+                           "D":"It's a standalone 'Awards' page accessible from anywhere",
+                           "E":"It's the 'Sharing' section of the app"
+                       },
+                       "answer": "C",
+                       "explanation": "The green back arrow at the top left with 'Summary' indicates this is a sub-screen within the Summary section. The bottom navigation also shows 'Summary' highlighted, confirming we're in a sub-page (specifically 'Awards') within the Summary section, not on the main Summary page itself.",
+                       "difficulty": "easy"
+                       "image_size":[
+                           1179,
+                           2556
+                       ],
+                       "platform":"os_ios",
+                       "app_name":"Fitness"
+               }
 
-        """
-        msgs = []
+               An example for level2:
+               line={
+                       "index":0,
+                       "image_path":"os_windows/0b08bd98_a0e7b2a5_68e346390d562be39f55c1aa7db4a5068d16842c0cb29bd1c6e3b49292a242d1.png",
+                       "instruction":"The downward arrow button allows you to scroll down through the list of years.",
+                       "bbox":[
+                           0.3875,
+                           0.1361,
+                           0.3945,
+                           0.1507
+                       ],
+                       "image_size":[
+                           2560,
+                           1440
+                       ],
+                       "data_type":"icon",
+                       "platform":"os_windows",
+                       "app_name":"calendar",
+                       "grounding_type":"basic"
+               }
+           dataset (str), the name of the benchmark. It can be used to determine different prompt format for different task.
+                           It should be one of ["GUIElementGrounding", "GUIContentUnderstanding", "GUITaskAutomation", "GUITaskCollaboration": ,']
+       Returns:
+           msgs (list[dict]): inputs to model. It will be processed by preprocess_uitars provided by this file after some nessaccery checking.
+               It should follow this format:
+               [
+                   {'role': 'xxxxx', 'type': 'image/text', value: 'xxxxx},
+                   {'role': 'xxxxx', 'type': 'image/text', value: 'xxxxx},
+                   ...
+                   {'role': 'xxxxx', 'type': 'image/text', value: 'xxxxx}
+               ]
 
-        tgt_path = os.path.join(
-            "path/to/image/dir",
-            line["image_path"],
-        )
-        instruction = line["instruction"]
+       """
+       msgs = []
 
-        if dataset == "GUIElementGrounding":
-            msgs.append({"role": "user", "type": "image", "value": f"{tgt_path}"})
+       tgt_path = os.path.join(
+           "path/to/image/dir",
+           line["image_path"],
+       )
+       instruction = line["instruction"]
 
-            msgs.append(
-                {
-                    "role": "user",
-                    "type": "text",
-                    "value": GROUNDING_user_prompt.format(instruction=instruction),
-                }
-            )
-            return msgs
-        elif dataset == "GUIContentUnderstanding":
-            msgs.append({"role": "user", "type": "image", "value": f"{tgt_path}"})
+       if dataset == "GUIElementGrounding":
+           msgs.append({"role": "user", "type": "image", "value": f"{tgt_path}"})
 
-            msgs.append(
-                {
-                    "role": "user",
-                    "type": "text",
-                    "value": QA_user_prompt.format(instruction=instruction),
-                }
-            )
-            return msgs
-        else:
-            pass
-    ```
+           msgs.append(
+               {
+                   "role": "user",
+                   "type": "text",
+                   "value": GROUNDING_user_prompt.format(instruction=instruction),
+               }
+           )
+           return msgs
+       elif dataset == "GUIContentUnderstanding":
+           msgs.append({"role": "user", "type": "image", "value": f"{tgt_path}"})
 
-    - implement `preprocess_uitars` function to process the outputs of `build_custom_prompt` (the function name is not strictly restricted)
-    ```python
-    def preprocess_uitars(message, model, processor, **kwargs):
-        """
-        Process message into input_ids, attn_masks, etc.
+           msgs.append(
+               {
+                   "role": "user",
+                   "type": "text",
+                   "value": QA_user_prompt.format(instruction=instruction),
+               }
+           )
+           return msgs
+       else:
+           pass
+   ```
 
-        Args:
-            message (list[dict])
-                    An example:
-                        message = [
-                            dict(role='system', type='text', value='You are an agent.'),
-                            dict(role='user', type='image', value='path/to/your/image.png'),
-                            dict(role='user', type='text', value='your user prompt')
-                        ]
-                    The system prompt is optional and it's determined by your setting.
-            model (LocalModelWrapper, ApiModelWrapper), this is used to get any variables or functions you need from model
-            processor (transformers.AutoProcessor), this is used to get any variables or functions you need from processor
-            kwargs (optional), parameters provided in your config: `models.your_model_name.kwargs`
+   - implement `preprocess_uitars` function to process the outputs of `build_custom_prompt` (the function name is not strictly restricted)
 
-        Returns:
-            inputs (dict, BatchFeature): outputs from processor
+   ```python
+   def preprocess_uitars(message, model, processor, **kwargs):
+       """
+       Process message into input_ids, attn_masks, etc.
 
-        """
-        from qwen_vl_utils import process_vision_info
+       Args:
+           message (list[dict])
+                   An example:
+                       message = [
+                           dict(role='system', type='text', value='You are an agent.'),
+                           dict(role='user', type='image', value='path/to/your/image.png'),
+                           dict(role='user', type='text', value='your user prompt')
+                       ]
+                   The system prompt is optional and it's determined by your setting.
+           model (LocalModelWrapper, ApiModelWrapper), this is used to get any variables or functions you need from model
+           processor (transformers.AutoProcessor), this is used to get any variables or functions you need from processor
+           kwargs (optional), parameters provided in your config: `models.your_model_name.kwargs`
 
-        messages = []
-        if "system" == message[0]["role"]:                                              # append system_prompt if exists. In our implementation, this will be skipped since we use default system prompt of UI-TARS
-            messages.append({"role": "system", "content": message[0]["value"]})
-            message = message[1:]
-        messages.append(
-            {"role": "user", "content": prepare_content(message, processor, **kwargs)}  # append user prompt and image url/path using `prepare_content` function, we omit this here and you can refer to `models.local_ui_tars.py` for details.
-        )
+       Returns:
+           inputs (dict, BatchFeature): outputs from processor
 
-        text = processor.apply_chat_template(                                           # apply chat template. The processor is built by AutoProcessor.from_pretrained in our benchmark. Thus, you can directly call the function.
-            [messages], tokenize=False, add_generation_prompt=True
-        )
+       """
+       from qwen_vl_utils import process_vision_info
 
-        images, videos = process_vision_info([messages])                                # process image represented by url/path into base64 or PIL.Image
-        inputs = processor(                                                             # call processor to generate inputs.
-            text=text, images=images, videos=videos, padding=True, return_tensors="pt"
-        )
-        inputs = inputs.to("cuda")
+       messages = []
+       if "system" == message[0]["role"]:                                              # append system_prompt if exists. In our implementation, this will be skipped since we use default system prompt of UI-TARS
+           messages.append({"role": "system", "content": message[0]["value"]})
+           message = message[1:]
+       messages.append(
+           {"role": "user", "content": prepare_content(message, processor, **kwargs)}  # append user prompt and image url/path using `prepare_content` function, we omit this here and you can refer to `models.local_ui_tars.py` for details.
+       )
 
-        return inputs
-    ```
+       text = processor.apply_chat_template(                                           # apply chat template. The processor is built by AutoProcessor.from_pretrained in our benchmark. Thus, you can directly call the function.
+           [messages], tokenize=False, add_generation_prompt=True
+       )
 
-    - implement `postprocess_uitars` function to process the output of model (the function name is not strictly restricted). 
-    ```python
-    def postprocess_uitars(outputs, model, processor, **kwargs):
-        """
-        Process outputs into response.
+       images, videos = process_vision_info([messages])                                # process image represented by url/path into base64 or PIL.Image
+       inputs = processor(                                                             # call processor to generate inputs.
+           text=text, images=images, videos=videos, padding=True, return_tensors="pt"
+       )
+       inputs = inputs.to("cuda")
 
-        Args:
-            outputs (Tensor, tuple[Tensor]), the outputs from your model, it should be decode to obtain predicted texts.
-            model (LocalModelWrapper, ApiModelWrapper), this is used to get any variables or functions you need from model
-            processor (transformers.AutoProcessor), this is used to get any variables or functions you need from processor
-            kwargs (optional), parameters provided in your config: `models.your_model_name.kwargs`
+       return inputs
+   ```
 
-        Returns:
-            resp (str): response from your model
+   - implement `postprocess_uitars` function to process the output of model (the function name is not strictly restricted).
 
-        """
-        if isinstance(outputs, tuple):
-            outputs = outputs[0]
-        if isinstance(outputs, torch.Tensor):
-            outputs = outputs.cpu().numpy()
-        out = processor.batch_decode(                                               # decode outputs of model
-            outputs, skip_special_tokens=True, clean_up_tokenization_spaces=True
-        )
+   ```python
+   def postprocess_uitars(outputs, model, processor, **kwargs):
+       """
+       Process outputs into response.
 
-        response = out[0]
-        resp = response.split("assistant\n")[-1]                                    # extract the part of assistant
-        return resp                                                                 # example: resp = "Action: click(point=[23,67])"
-    ```
+       Args:
+           outputs (Tensor, tuple[Tensor]), the outputs from your model, it should be decode to obtain predicted texts.
+           model (LocalModelWrapper, ApiModelWrapper), this is used to get any variables or functions you need from model
+           processor (transformers.AutoProcessor), this is used to get any variables or functions you need from processor
+           kwargs (optional), parameters provided in your config: `models.your_model_name.kwargs`
 
-    - implement `parsing_function` to parse the outputs of `postprocess_uitars` into required format (the function name is not restricted).
-    ```python
-    def parse_grounding_response(response, meta):
-        """Parse coordinates from model's response for evaluation
+       Returns:
+           resp (str): response from your model
 
-        Args:
-            response (str), response from model. It is also the outputs of postprocess_uitars or our default postprocess function.
-            meta (dict), original data from dataloader.
+       """
+       if isinstance(outputs, tuple):
+           outputs = outputs[0]
+       if isinstance(outputs, torch.Tensor):
+           outputs = outputs.cpu().numpy()
+       out = processor.batch_decode(                                               # decode outputs of model
+           outputs, skip_special_tokens=True, clean_up_tokenization_spaces=True
+       )
 
-        Returns:
-            parsed_predicted_point (list, None): The parsed coordinates of your prediction.
-        """
-        click_point = re.findall(r"\d+", response)
-        if len(click_point) == 2:
-            click_point = [int(x) for x in click_point]
-            parsed_predicted_point = uitars_postprocess(                            # UI-TARS follows the coordinates transformation of Qwen2.5VL
-                click_point, ast.literal_eval(meta["image_size"])
-            )
-            return parsed_predicted_point                                           # valid output = [23, 67]
-        else:
-            return None
-    ```
+       response = out[0]
+       resp = response.split("assistant\n")[-1]                                    # extract the part of assistant
+       return resp                                                                 # example: resp = "Action: click(point=[23,67])"
+   ```
 
+   - implement `parsing_function` to parse the outputs of `postprocess_uitars` into required format (the function name is not restricted).
+
+   ```python
+   def parse_grounding_response(response, meta):
+       """Parse coordinates from model's response for evaluation
+
+       Args:
+           response (str), response from model. It is also the outputs of postprocess_uitars or our default postprocess function.
+           meta (dict), original data from dataloader.
+
+       Returns:
+           parsed_predicted_point (list, None): The parsed coordinates of your prediction.
+       """
+       click_point = re.findall(r"\d+", response)
+       if len(click_point) == 2:
+           click_point = [int(x) for x in click_point]
+           parsed_predicted_point = uitars_postprocess(                            # UI-TARS follows the coordinates transformation of Qwen2.5VL
+               click_point, ast.literal_eval(meta["image_size"])
+           )
+           return parsed_predicted_point                                           # valid output = [23, 67]
+       else:
+           return None
+   ```
 4. Create a config file `config_local_uitars.json` in `configs`
 
 ```shell
@@ -310,46 +313,46 @@ and write relavant informations, such as the path of customized functions, param
 {
     // configurations for model
     "model": {
-        // Your model name. This is an identifier for logging.                                                                
+        // Your model name. This is an identifier for logging.                                                              
         "uitars-1.5-7b-local": {
             // If you use api-based model, this parameter should be: base_url?api_key=xxx&model=xxx. For example:  "https://api.openai.com/v1?api_key=your-api-key=gpt-4o"
             "model_path": "/path/of/your/checkpoints/UI-TARS-1.5-7B",
 
             // This parameter will be passed into LocalModelWrapper.your_model.generate or APIModelWrapper.client.chat.completions.create
-            "generate_cfg": {                                                       
+            "generate_cfg": {                                                     
                 "max_new_tokens": 512
             },
 
             // Currently, we only support transformers and api mode.
-            "imp_type": "transformers",                               
+            "imp_type": "transformers",                             
 
-            // Most models follow the design of transformers, and thus this parameter do not need to be modified.              
-            "generate_function": "generate",                           
+            // Most models follow the design of transformers, and thus this parameter do not need to be modified.            
+            "generate_function": "generate",                         
 
-            // The path of our customized function `preprocess_uitars` in the file we created in step 3.             
-            "preprocess_function": "models.local_uitars.preprocess_uitars",       
+            // The path of our customized function `preprocess_uitars` in the file we created in step 3.           
+            "preprocess_function": "models.local_uitars.preprocess_uitars",     
 
             // The path of our customized function `postprocess_function` in the file we created in step 3.  
-            "postprocess_function": "models.local_uitars.postprocess_uitars",       
+            "postprocess_function": "models.local_uitars.postprocess_uitars",     
 
             // This can determine which task will use custom prompt and will call your function implemented in step 3.
             // Once you set a custom prompt for a task(for example GUIElementGrounding), the parameter `kwargs['system_prompt']` will NOT work.
             "custom_prompt": {
-                
+              
                 // For example, we only build custom prompt for GUIElementGrounding task. Therefore, the prompt for GUIContentUnderstanding will be built by default function in `benchmarks.l1_content_understanding.py`
                 "GUIElementGrounding": "models.local_uitars.build_custom_prompt"
             },
 
             // These args can be fetched in your customized functions and you are free to use.
-            "kwargs": {               
-                
+            "kwargs": {             
+              
                 // IMPORTANT. There are three mode: ['model_default', 'benchmark_default', 'directly write your system prompt']. 
                 // This parameter only take effect when you DO NOT set custom prompt for a task. For example, in this config, you will build customized prompt for GUIElementGrounding task 
                 // while GUIContentUnderstanding task will adopt default prompt in our benchmark and the parameter `system_prompt` will take effect.
                 // - mode `model_default`: use your default system prompt in your model. Thus, content with `role='user'` are preserved in messages.
                 // - mode `benchmark_default`: use our default system prompt in our benchmark.
                 // - mode `directly write your system prompt`: you can directly set system prompt here and this will be append in messages.
-                "system_prompt": "model_default",     
+                "system_prompt": "model_default",   
 
                 // These args can be configured freely. `img_size` currently do not take effect and we plan to support customize the image size in the future.
                 "max_pixels": 2116800,
@@ -361,42 +364,41 @@ and write relavant informations, such as the path of customized functions, param
     },
 
     // configurations for benchmark
-    "data": {                                                                       
+    "data": {                                                                     
         "GUIElementGrounding": {
             // usable mode: ['all', 'basic', 'advanced']. When mode='all', both 'basic' and 'advanced' splits will be evaluated.
-            "mode": "all",                                                          
+            "mode": "all",                                                        
 
             // The customized parsing function we implemented in step 3.
-            "parse_function": "models.local_uitars.parse_grounding_response"        
+            "parse_function": "models.local_uitars.parse_grounding_response"      
         },
         "GUIContentUnderstanding": {
 
             // available mode: ['all', 'easy', 'medium', 'hard']
-            "mode": "all",                                                          
+            "mode": "all",                                                        
 
             "parse_function": "models.local_uitars.parse_understanding_response",
 
             // Currently, we don't support judge model to check whether the predicted option matchs the GT in level 1. We provide a strong regex pattern to extract options in our code and we find it works well.,
-            "match_mode": "exact_match"                                            
+            "match_mode": "exact_match"                                          
         }
     }
 }
 ```
 
 > [!WARNING]
->  Please pay attention to the role of `custom_prompt` and `kwargs['system_prompt']`. 
+> Please pay attention to the role of `custom_prompt` and `kwargs['system_prompt']`.
 >
 > `custom_prompt` has a higher priority than `kwargs['system_prompt']`. If a prompt function is defined in `custom_prompt` for a task, the system_prompt in `kwargs['system_prompt']` will be ignored for this task. If your format does not require special customization, we recommend configuring `kwargs['system_prompt']` directly to define your system_prompt. Otherwise, if more control is needed, we suggest implementing `custom_prompt` to fully customize the behavior.
-
 
 5. Start evaluation and the output dir is defined in `.env` file through the `EVAL_WORK_DIR` variable.
 
 ```shell
 python evaluate.py --config configs/config_local_uitars.py
 ```
+
 Our code is based on VLMEvalkit, thus the root path of data can be defined with the `LMUData`:
 
 ```shell
 LMUData=/mnt/hwfile/any/dir/LMUData python evaluate.py --config configs/config_local_uitars.py
-```
 ```
