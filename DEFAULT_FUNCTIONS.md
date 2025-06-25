@@ -4,7 +4,7 @@ We provide default functions and format in our benchmark, including prompt build
 
 ## Prompt construction
 
-### L1 - GUI Content Understanding
+### L1-GUI Content Understanding
 
 function:
 
@@ -68,7 +68,7 @@ output format (we enable system prompt for example):
 ]
 ```
 
-### L2 - GUI Element Grounding
+### L2-GUI Element Grounding
 
 function:
 
@@ -222,7 +222,7 @@ def default_postprocess_function(self, message, model, processor, **kwargs):
 
 ## Parsing functions
 
-### L1 - GUI Content Understanding
+### L1-GUI Content Understanding
 
 ```python
 def parser_response_into_coordinates(text, meta=None):
@@ -249,7 +249,7 @@ def parser_response_into_coordinates(text, meta=None):
         ]  # we select the first if multiple (x,y) are parsed.
 ```
 
-### L2 - GUI Element Grounding
+### L2-GUI Element Grounding
 
 ```python
 def parser_answers_into_option(text, meta=None):
