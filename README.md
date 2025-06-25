@@ -40,7 +40,7 @@ MMBench-GUI is developed based on [VLMEvalkit](https://github.com/open-compass/V
 ## 🪧 News
 
 * **2025.06.24** We have released the refactoring code for level1-GUI Content Understanding and level2-GUI Element Grounding tasks. Next, tasks of level3 and level4 will also be integrated into this codebase.
-* **2025.06.24** We have released the images and json files used in level1-GUI Content Understanding and level2-GUI Element Grounding tasks. Resources of level3 and level4 will be release in the next one or two weeks.
+* **2025.06.24** We have released the images and json files used in level1-GUI Content Understanding and level2-GUI Element Grounding tasks. Resources of level3 and level4 will be released in the next one or two weeks.
 
 
 ## Installation and Evaluation
@@ -79,7 +79,7 @@ pip install flash-attn==2.7.4.post1 --no-build-isolation
 > We also provide the environment packages list in requirements/dev_env.txt for reproducing the same env as ours.
 
 ### Data prepare
-Please download our data in [HuggingFace](https://huggingface.co/datasets/huiserwang/MMBench-GUI) or [OpenXLab](), and organize these files as below:
+Please download our data in [HuggingFace](https://huggingface.co/datasets/OpenGVLab/MMBench-GUI), and organize these files as below:
 
 ```text
 DATA_ROOT/                              // We use LMUData in VLMEvalkit as default root dir.
@@ -97,7 +97,7 @@ DATA_ROOT/                              // We use LMUData in VLMEvalkit as defau
 `---|-- L2_annotations.json 
 ```
 
-You can also run `download.py` to automaticly download data:
+You can also run `download.py` to automaticly download data from [OpenXLab](https://openxlab.org.cn):
 ```shell
 LMUData=/path/of/data python utils/download.py
 ```
