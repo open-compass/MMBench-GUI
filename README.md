@@ -5,7 +5,7 @@
 </p>
 
 > [!NOTE]
-> Our technical report will be released on arXiv *in next week*.
+> Our technical report has released in this repo! Meanwhile, arxiv version will be released on Sunday (ET).
 
 
 ## 📖 Introduction
