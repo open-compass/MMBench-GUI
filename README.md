@@ -1,7 +1,7 @@
 # 🖥️ MMBench-GUI: Hierarchical Multi-Platform Evaluation Framework for GUI Agents
 
 <p align="center">
-🤗 <a href="https://huggingface.co/datasets/OpenGVLab/MMBench-GUI">Evaluation Data</a>&nbsp&nbsp | &nbsp&nbsp📑 <a href="#">Paper (coming soon)</a>&nbsp&nbsp | &nbsp&nbsp📢 <a href="#">Leaderboard (coming soon)</a>
+🤗 <a href="https://huggingface.co/datasets/OpenGVLab/MMBench-GUI">Evaluation Data</a>&nbsp&nbsp | &nbsp&nbsp📑 <a href="https://raw.githubusercontent.com/open-compass/MMBench-GUI/main/MMBench_GUI_report.pdf">Paper</a>&nbsp&nbsp | &nbsp&nbsp📢 <a href="#">Leaderboard (coming soon)</a>
 </p>
 
 > [!NOTE]
@@ -42,7 +42,7 @@ MMBench-GUI is developed based on [VLMEvalkit](https://github.com/open-compass/V
 
 
 ## 🪧 News
-
+* **2025.07.24** We release our technical report [Paper](https://raw.githubusercontent.com/open-compass/MMBench-GUI/main/MMBench_GUI_report.pdf)
 * **2025.06.24** We have released the refactoring code for `L1-GUI Content Understanding` and `L2-GUI Element Grounding` tasks. Next, tasks of `L3-GUI Task Automation` and `L4-GUI Task Collaboration` will also be integrated into this codebase.
 * **2025.06.24** We have released the images and json files used in `L1-GUI Content Understanding` and `L2-GUI Element Grounding` tasks at [HuggingFace](https://huggingface.co/datasets/OpenGVLab/MMBench-GUI).
 
